@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    //hi internet
     MenuItem mPreviousMenuItem;
     final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
