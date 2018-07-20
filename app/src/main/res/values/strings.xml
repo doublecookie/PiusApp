@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">PiusApp</string>
+
+    <string name="notification_channel_id">main_channel_id</string>
+    <string name="notification_channel_name">notifications</string>
+    <string name="notification_channel_description">all notifications</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_group_vtr_plan">Vertretungspläne</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_vtr_plan">Vertretungsplan</string>
+    <string name="nav_stundenplan">Stundenplan</string>
+    <string name="nav_group_news">Neuigkeiten</string>
+    <string name="nav_news">News</string>
+    <string name="nav_termine">Termine</string>
+    <string name="nav_group_information">Informationen</string>
+    <string name="nav_teacher">Lehrer und Mitarbeiter</string>
+    <string name="nav_unterrichtszeiten">Unterrichtszeiten</string>
+    <string name="nav_group_settings">Einstellungen</string>
+    <string name="nav_kurse">Kurse</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="nav_impressum">Impressum</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_start">StartActivity</string>
+
+    <string name="vertretungs_error">Leider ist ein Fehler beim Darstellen aufgetreten\nAktualisiere um es erneut zu versuchen</string>
+
+    <string name="username_text">Benutzername:</string>
+    <string name="username">Benutzername</string>
+    <string name="password_text">Passwort:</string>
+    <string name="password">Passwort</string>
+
+    <string name="start_introduction">Bla bli blub ein paar Start Worte</string>
+
+</resources>

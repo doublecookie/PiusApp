@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/overall_nav_group">
+
+        <item android:title="@string/nav_group_vtr_plan">
+            <menu>
+                <item
+                    android:id="@+id/nav_dashboard"
+                    android:icon="@drawable/dashboard"
+                    android:title="@string/nav_dashboard"/>
+                <item
+                    android:id="@+id/nav_vtr_plan"
+                    android:icon="@drawable/vertretungsplan"
+                    android:title="@string/nav_vtr_plan" />
+            </menu>
+        </item>
+
+        <item
+            android:id="@+id/nav_stundenplan"
+            android:icon="@drawable/stundenplan"
+            android:title="@string/nav_stundenplan" />
+
+        <item android:title="@string/nav_group_news">
+            <menu>
+                <item
+                    android:id="@+id/nav_news"
+                    android:icon="@drawable/news"
+                    android:title="@string/nav_news" />
+                <item
+                    android:id="@+id/nav_termine"
+                    android:icon="@drawable/termine"
+                    android:title="@string/nav_termine" />
+            </menu>
+        </item>
+
+        <item android:title="@string/nav_group_information">
+            <menu>
+                <item
+                    android:id="@+id/nav_teacher"
+                    android:icon="@drawable/teacher"
+                    android:title="@string/nav_teacher" />
+                <item
+                    android:id="@+id/nav_unterrichtszeiten"
+                    android:icon="@drawable/unterrichtszeiten3"
+                    android:title="@string/nav_unterrichtszeiten" />
+            </menu>
+        </item>
+
+        <item android:title="@string/nav_group_settings">
+            <menu>
+                <item
+                    android:id="@+id/nav_kurse"
+                    android:icon="@drawable/kurse"
+                    android:title="@string/nav_kurse" />
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/settings"
+                    android:title="@string/nav_settings" />
+            </menu>
+        </item>
+
+        <group android:id="@+id/nav_group_impressum">
+            <item
+                android:id="@+id/nav_impressum"
+                android:icon="@drawable/impressum"
+                android:title="@string/nav_impressum" />
+        </group>
+
+    </group>
+</menu>
