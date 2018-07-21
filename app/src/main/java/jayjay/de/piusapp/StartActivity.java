@@ -18,13 +18,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class StartActivity extends AppCompatActivity {
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
 
+    LinearLayout loginLinear;
+    Button nextButton;
+    ProgressBar loading;
+    TextView startIntroduction;
+    ImageView appLogo;
+
     boolean backAlreadyPressed = false;
+    int state = 0;
 
     final int RESULT_EXIT = 101;
 
@@ -32,6 +45,15 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        loginLinear = findViewById(R.id.login_linear);
+        nextButton = findViewById(R.id.next_button);
+        loading = findViewById(R.id.start_loading);
+        startIntroduction = findViewById(R.id.start_introduction);
+        appLogo = findViewById(R.id.app_logo);
+
+        loginLinear.setAlpha(0);
+        loading.setAlpha(0);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -49,7 +71,14 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void next(View view){
-
+        switch(state){
+            case 0:
+                appLogo.animate().y(32).setInterpolator(new AccelerateDecelerateInterpolator());
+                startIntroduction.animate().alpha(0).setInterpolator(new AccelerateDecelerateInterpolator());
+                loginLinear.animate().alpha(100).setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
+                state++;
+                break;
+        }
     }
 
     private void starteBackgroundTasks(){
