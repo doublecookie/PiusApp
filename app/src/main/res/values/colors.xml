@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#11506c</color>
     <color name="colorAccent">#84bde2</color>
     <item type="color" name="colorPius">#57a2d3</item>
+    <item type="color" name="gray">#aaa</item>
 </resources>

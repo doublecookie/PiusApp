@@ -35,5 +35,6 @@
     <string name="password">Passwort</string>
 
     <string name="start_introduction">Bla bli blub ein paar Start Worte</string>
+    <string name="start_next_page">Weiter</string>
 
 </resources>

@@ -48,6 +48,10 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    public void next(View view){
+
+    }
+
     private void starteBackgroundTasks(){
 
         //schedule the job only once.
