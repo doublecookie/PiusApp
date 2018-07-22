@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -23,18 +24,29 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 
 
-public class DownloadData extends AsyncTask<Void ,Void ,DownloadData.Wrapper> {
+public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
 
     private Context mContext;
     private AsyncTaskCompleteListener asyncTaskCompleteListener;
+    private boolean mOnlyCheckConnection;
 
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
-    public DownloadData(Context context, AsyncTaskCompleteListener listener){
+    DownloadData(Context context, AsyncTaskCompleteListener listener){
         mContext = context;
         asyncTaskCompleteListener = listener;
+        mOnlyCheckConnection = false;
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        editor = preferences.edit();
+    }
+
+    DownloadData(Context context, AsyncTaskCompleteListener listener, boolean onlyCheckConnection){
+        mContext = context;
+        asyncTaskCompleteListener = listener;
+        mOnlyCheckConnection = onlyCheckConnection;
 
         preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         editor = preferences.edit();
@@ -43,14 +55,8 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadData.Wrapper> {
     HttpURLConnection httpURLConnection = null;
     BufferedReader bufferedReader = null;
 
-    public class Wrapper {
-        public String downloadData;
-        public boolean success;
-        public String errorMessage;
-    }
-
     @Override
-    protected Wrapper doInBackground(Void... params) {
+    protected DownloadWrapper doInBackground(Void... params) {
         Log.v("DwonloadData AsyncTask", "starte do in Background");
 
         String username = preferences.getString("username", null);
@@ -60,11 +66,11 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadData.Wrapper> {
 
         String strURL = "http://pius-gymnasium.de/vertretungsplan/";
 
-        Wrapper returnWrapper = new Wrapper();
+        DownloadWrapper returnWrapper = new DownloadWrapper();
         returnWrapper.downloadData = "";
         returnWrapper.success = false;
 
-        Wrapper htmlWrapper = new Wrapper();
+        DownloadWrapper htmlWrapper = new DownloadWrapper();
         htmlWrapper.success = false;
 
         try {
@@ -72,34 +78,31 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadData.Wrapper> {
             htmlWrapper = loadHtmlCode(username, password, url);
         } catch (Exception e) {}
 
-        returnWrapper.downloadData = htmlWrapper.downloadData;
-        System.out.println("htmlWrapper.downloadData = " + htmlWrapper.downloadData);
+        if(mOnlyCheckConnection){
+            returnWrapper.downloadData = htmlWrapper.downloadData;
+            return returnWrapper;
+        }else{
+            String dokumentString = "error";
+            if (htmlWrapper.success) {
+                dokumentString = processData(Jsoup.parse(htmlWrapper.downloadData));
+            }
+            else {
+                returnWrapper.success = false;
+                returnWrapper.errorMessage = htmlWrapper.errorMessage;
+            }
 
-        String dokumentString = "error";
-        if (htmlWrapper.success) {
-            //dokumentString = processData(Jsoup.parse(htmlWrapper.downloadData));
+            if (!(dokumentString.equals("error") || dokumentString.equals(""))) {
+                dokumentString = "°" + aktuelleZeit + "\n" + dokumentString;
+                returnWrapper.downloadData = dokumentString;
+                returnWrapper.success = true;
+            }
+            return returnWrapper;
         }
-//        else {
-//            returnWrapper.success = false;
-//            returnWrapper.errorMessage = htmlWrapper.errorMessage;
-//            returnWrapper.downloadData = readFromFile(filename);
-//        }
-//
-//
-//        if (!(dokumentString.equals("error") || dokumentString.equals(""))) {
-//            dokumentString = "°" + aktuelleZeit + "\n" + dokumentString;
-//            writeToFile(dokumentString, filename);
-//            returnWrapper.downloadData = dokumentString;
-//            returnWrapper.success = true;
-//        }
-
-        return returnWrapper;
-
     }
 
-    Wrapper loadHtmlCode(final String strUserId, final String strPassword, URL url) {
+    DownloadWrapper loadHtmlCode(final String strUserId, final String strPassword, URL url) {
 
-        Wrapper wrapper = new Wrapper();
+        DownloadWrapper wrapper = new DownloadWrapper();
         wrapper.downloadData = "";
         wrapper.success = true;
         wrapper.errorMessage = mContext.getString(R.string.vertretungs_error);
@@ -323,8 +326,8 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadData.Wrapper> {
     }
 
     @Override
-    protected void onPostExecute(Wrapper wrapper) {
-        asyncTaskCompleteListener.onComplete(wrapper.downloadData);
+    protected void onPostExecute(DownloadWrapper wrapper) {
+        asyncTaskCompleteListener.onComplete(wrapper);
         super.onPostExecute(wrapper);
     }
 }
