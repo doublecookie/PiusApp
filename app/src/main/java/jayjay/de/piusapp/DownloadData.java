@@ -62,6 +62,8 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         String username = preferences.getString("username", null);
         String password = preferences.getString("password", null);
 
+        //Log.v("DownloadData:Password:","username:"+username+":password:"+password);
+
         String aktuelleZeit = System.currentTimeMillis() + "";
 
         String strURL = "http://pius-gymnasium.de/vertretungsplan/";
@@ -76,10 +78,13 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         try {
             URL url = new URL(strURL);
             htmlWrapper = loadHtmlCode(username, password, url);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.e("DownloadData:loadHtml", e.toString());
+        }
 
         if(mOnlyCheckConnection){
             returnWrapper.downloadData = htmlWrapper.downloadData;
+            returnWrapper.success = htmlWrapper.success;
             return returnWrapper;
         }else{
             String dokumentString = "error";
@@ -118,6 +123,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
         try {
 
+            Log.v("DownloadData","Aufbau der Verbindung");
             // Aufbau der Verbindung
             httpURLConnection = (HttpURLConnection) url.openConnection();
 
@@ -138,7 +144,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
             while ((line = bufferedReader.readLine()) != null) {
                 downloadBuilder.append(line).append("\n");
-                //Log.v("MainActivity", "Line: " + line);
+                Log.v("MainActivity", "Line: " + line);
             }
             String downloadStr = downloadBuilder.toString();
             if (downloadStr.length() == 0) {
@@ -151,7 +157,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
             wrapper.downloadData = downloadStr;
         }
         catch (IOException e) {
-            Log.e("ConnectionError: ", e.toString());
+            Log.e("DownloadData:loadhtml", "ConnectionError: " + e.toString());
                 wrapper.success = false;
                 wrapper.errorMessage = mContext.getString(R.string.vertretungs_error);
         }
@@ -163,7 +169,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                     try {
                         bufferedReader.close();
                     } catch (final IOException e) {
-                        Log.e("MainActivity", "Error closing stream", e);
+                        Log.e("DownloadData", "Error closing stream", e);
                     }
                 }
             }
@@ -309,6 +315,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
     }
 
     private void cancel(){
+        Log.v("DownloadData","cancelled");
         try{
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();

@@ -28,8 +28,8 @@ public class UpdateJobService extends JobService{
 
     private AsyncTaskCompleteListener asyncTaskCompleteListener = new AsyncTaskCompleteListener() {
         @Override
-        public void onComplete(String data) {
-            createNotification("test",data,data);
+        public void onComplete(DownloadWrapper data) {
+            //createNotification("test",data,data);
         }
     };
 
