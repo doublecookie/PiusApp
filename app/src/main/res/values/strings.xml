@@ -31,8 +31,10 @@
 
     <string name="username_text">Benutzername:</string>
     <string name="username">Benutzername</string>
+    <string name="username_explanation">Hier gibt ein super tolles Username rein</string>
     <string name="password_text">Passwort:</string>
     <string name="password">Passwort</string>
+    <string name="password_explanation">Hier gibt ein super tolles Passwort rein</string>
 
     <string name="start_introduction">Bla bli blub ein paar Start Worte</string>
     <string name="start_introduction_comeback">Bla bli blub ein paar Start Worte falls du die Pius App schon installiert hattest</string>

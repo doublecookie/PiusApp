@@ -29,6 +29,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -58,7 +59,11 @@ public class StartActivity extends AppCompatActivity {
 
     boolean backAlreadyPressed = false;
     boolean testingInProgress = false;
+    boolean userOfOlderVersion = false;
     int state = 0;
+
+    boolean informationStateUser = false;
+    boolean informationStatePassw = false;
 
     final int RESULT_EXIT = 101;
     final int RESULT_REFRESH = 201;
@@ -78,11 +83,42 @@ public class StartActivity extends AppCompatActivity {
         usernameEdit = findViewById(R.id.username_edit_text);
         passwordEdit = findViewById(R.id.password_edit_text);
 
+        findViewById(R.id.start_info_button_username).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(informationStateUser) findViewById(R.id.start_info_username).setVisibility(View.GONE);
+                else{
+                    findViewById(R.id.start_info_username).setVisibility(View.VISIBLE);
+                    if(informationStatePassw){
+                        findViewById(R.id.start_info_password).setVisibility(View.GONE);
+                        informationStatePassw = false;
+                    }
+                }
+                informationStateUser = !informationStateUser;
+            }
+        });
 
-        if(readFromFile("version").length()>2){
+        findViewById(R.id.start_info_button_password).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(informationStatePassw) findViewById(R.id.start_info_password).setVisibility(View.GONE);
+                else{
+                    findViewById(R.id.start_info_password).setVisibility(View.VISIBLE);
+                    if(informationStateUser){
+                        findViewById(R.id.start_info_username).setVisibility(View.GONE);
+                        informationStateUser = false;
+                    }
+                }
+                informationStatePassw = !informationStatePassw;
+            }
+        });
+
+        if((userOfOlderVersion = readFromFile("login").length()>2)){
             startIntroduction.setText(getString(R.string.start_introduction_comeback));
             usernameEdit.setText(readFromFile("login").split("\n")[0]);
             passwordEdit.setText(readFromFile("login").split("\n")[1]);
+
+            //TODO: read settings
         }
 
         loginLinear.setVisibility(View.GONE);
@@ -123,11 +159,11 @@ public class StartActivity extends AppCompatActivity {
             if(data.success && state == 1){
                 hideKeyboard(thisActivity);
                 nextButton.setTextColor(getResources().getColor(R.color.colorAccent));
-                loginLinear.animate().alpha(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                loginLinear.animate().alpha(0f).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        appLogo.animate().translationY(-192).alpha(100).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
+                        appLogo.animate().translationY(-192f).alpha(1f).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
                     }
                 }, 200);
                 //TODO: animate Kurse Object to fly in
@@ -142,11 +178,11 @@ public class StartActivity extends AppCompatActivity {
         switch(state){
             case 0:
                 loginLinear.setVisibility(View.VISIBLE);
-                loginLinear.setAlpha(0);
+                loginLinear.setAlpha(0f);
 
-                appLogo.animate().translationY(-192).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
-                startIntroduction.animate().alpha(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
-                loginLinear.animate().translationY(-128).alpha(100).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+                appLogo.animate().translationY(-192f).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
+                startIntroduction.animate().alpha(0f).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                loginLinear.animate().translationY(-128f).alpha(1f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
 
                 nextButton.setTextColor(getResources().getColor(R.color.gray));
 
@@ -209,6 +245,13 @@ public class StartActivity extends AppCompatActivity {
                     }
                 });
 
+                if(userOfOlderVersion) new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkForValidateCredentials();
+                    }
+                }, 1000);
+
                 state++;
                 break;
 
@@ -232,13 +275,18 @@ public class StartActivity extends AppCompatActivity {
 
     private void onSoftKeyboardChanged(boolean open){
         if(open){
-            appLogo.animate().alpha(0).translationY(-256).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
-            loginLinear.animate().translationY(-768).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
-            loading.animate().translationY(-640).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            appLogo.animate().alpha(0f).translationY(-256f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            loginLinear.animate().translationY(-768f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            loading.animate().translationY(-640f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
         }else{
-            appLogo.animate().alpha(100).translationY(-192).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
-            loginLinear.animate().translationY(-128).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
-            loading.animate().translationY(0).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            loginLinear.animate().translationY(-128f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            loading.animate().translationY(0f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    appLogo.animate().alpha(1f).translationY(-192f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+                }
+            }, 300);
         }
     }
 

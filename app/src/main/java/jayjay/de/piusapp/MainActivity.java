@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                refresh();
             }
         });
 
@@ -105,10 +106,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_REFRESH){
-
-        }
+        if(resultCode == RESULT_REFRESH) refresh();
         else if(requestCode == REQUEST_EXIT && resultCode == RESULT_EXIT) finish();
+    }
+
+    void refresh(){
+
     }
 
     private void checkFirstRunSettingsApplied(){
