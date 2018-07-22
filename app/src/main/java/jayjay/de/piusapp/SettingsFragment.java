@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * noch leeres Fragment
+ * hier werden mal die Settings reinkommen
  */
 public class SettingsFragment extends Fragment {
 

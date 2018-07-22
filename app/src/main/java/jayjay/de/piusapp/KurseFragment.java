@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * noch leeres Fragment
+ * hier wird mal die Kurse Auswahl reinkommen
  */
 public class KurseFragment extends Fragment {
 

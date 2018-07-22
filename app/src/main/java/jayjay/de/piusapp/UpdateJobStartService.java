@@ -9,7 +9,8 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-@RequiresApi(21)
+//dieser Job wurde geschedult und wird den sich wiederholdenden Job schedulen
+@RequiresApi(21)//android sdk 21 wegen JobScheduler
 public class UpdateJobStartService extends JobService{
 
     @Override

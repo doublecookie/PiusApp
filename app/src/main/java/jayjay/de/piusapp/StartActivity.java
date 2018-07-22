@@ -43,9 +43,11 @@ import java.io.InputStreamReader;
 
 public class StartActivity extends AppCompatActivity {
 
+    //Shared Preferences
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
 
+    //layout objekte
     LinearLayout loginLinear;
     Button nextButton;
     ProgressBar loading;
@@ -54,17 +56,21 @@ public class StartActivity extends AppCompatActivity {
     WatchfulEditText usernameEdit;
     WatchfulEditText passwordEdit;
 
+    //Contexte
     DownloadData lastAsyncTask;
     Activity thisActivity;
 
+    //"einstellungen"
     boolean backAlreadyPressed = false;
     boolean testingInProgress = false;
     boolean userOfOlderVersion = false;
     int state = 0;
 
+    //variablen
     boolean informationStateUser = false;
     boolean informationStatePassw = false;
 
+    //RESULT Codes für setResult(CODE)
     final int RESULT_EXIT = 101;
     final int RESULT_REFRESH = 201;
 
@@ -73,7 +79,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        thisActivity = this;
+        thisActivity = this; //Übergabe der activity zur späteren nutzung in OnComplete von Interface
 
         loginLinear = findViewById(R.id.login_linear);
         nextButton = findViewById(R.id.next_button);

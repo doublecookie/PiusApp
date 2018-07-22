@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Noch komplett leer
+ * Hier kommt später das Dashboard hin
  */
 public class DashboardFragment extends Fragment {
 

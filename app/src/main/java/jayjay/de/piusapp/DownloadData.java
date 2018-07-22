@@ -23,42 +23,51 @@ import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 
-
+//AsyncTask zum herunterladen von Daten
 public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
-
+    //Attribute
     private Context mContext;
     private AsyncTaskCompleteListener asyncTaskCompleteListener;
     private boolean mOnlyCheckConnection;
 
+    HttpURLConnection httpURLConnection = null;
+    BufferedReader bufferedReader = null;
+
+    //Shared Preferences Objecte um auf Einstellungen und Login zuzugreifen
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
+    //erster Konstruktor
     DownloadData(Context context, AsyncTaskCompleteListener listener){
+        //Speichern der ÜbergabeParameter in Attributen
         mContext = context;
         asyncTaskCompleteListener = listener;
-        mOnlyCheckConnection = false;
+        mOnlyCheckConnection = false; //keine Übergabe im Konstruktor --> Default: false
 
+        //SharedPreference Objecte initialisieren
         preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         editor = preferences.edit();
     }
 
+    //zweiter Konstruktor, falls man nur checken möchte ob Login funktioniert
     DownloadData(Context context, AsyncTaskCompleteListener listener, boolean onlyCheckConnection){
+        //Speichern der ÜbergabeParameter in Attributen
         mContext = context;
         asyncTaskCompleteListener = listener;
         mOnlyCheckConnection = onlyCheckConnection;
 
+        //SharedPreference Objecte initialisieren
         preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         editor = preferences.edit();
     }
 
-    HttpURLConnection httpURLConnection = null;
-    BufferedReader bufferedReader = null;
-
+    //als erstes ausgeführte Methode
     @Override
     protected DownloadWrapper doInBackground(Void... params) {
         Log.v("DwonloadData AsyncTask", "starte do in Background");
 
+        //login daten aus SharedPreferences
         String username = preferences.getString("username", null);
         String password = preferences.getString("password", null);
 
@@ -68,25 +77,29 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
         String strURL = "http://pius-gymnasium.de/vertretungsplan/";
 
+        //Object des DownloadWrappers welches ganz am Ende zurückgegeben wird
         DownloadWrapper returnWrapper = new DownloadWrapper();
         returnWrapper.downloadData = "";
         returnWrapper.success = false;
 
+        //Object des DownloadWrappers für den Download des HTML Codes
         DownloadWrapper htmlWrapper = new DownloadWrapper();
         htmlWrapper.success = false;
 
         try {
             URL url = new URL(strURL);
-            htmlWrapper = loadHtmlCode(username, password, url);
+            htmlWrapper = loadHtmlCode(username, password, url); //htmlWrapper wird gefüllt mit Methode loadHtmlCode
         } catch (Exception e) {
             Log.e("DownloadData:loadHtml", e.toString());
         }
 
+        //Ob Html Code noch umgewandelt werden soll oder nicht
         if(mOnlyCheckConnection){
             returnWrapper.downloadData = htmlWrapper.downloadData;
             returnWrapper.success = htmlWrapper.success;
             return returnWrapper;
         }else{
+            //TODO: das hier hat noch nie gut funktiioniert, deshalb wechsel zur Speicherung des Planes in Json
             String dokumentString = "error";
             if (htmlWrapper.success) {
                 dokumentString = processData(Jsoup.parse(htmlWrapper.downloadData));
@@ -101,18 +114,19 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                 returnWrapper.downloadData = dokumentString;
                 returnWrapper.success = true;
             }
-            return returnWrapper;
+            return returnWrapper; //Beenden des AsyncTasks in PostExecute
         }
     }
 
     DownloadWrapper loadHtmlCode(final String strUserId, final String strPassword, URL url) {
 
+        //neuer Wrapper mit Standart Werten
         DownloadWrapper wrapper = new DownloadWrapper();
         wrapper.downloadData = "";
         wrapper.success = true;
         wrapper.errorMessage = mContext.getString(R.string.vertretungs_error);
 
-
+        //Handler der nach 60 Sekunden Download abbricht --> um Android Endlos Lade Bug zu verhindern
         Handler abbruchLadeHandler = new Handler(Looper.getMainLooper());
         abbruchLadeHandler.postDelayed(new Runnable() {
             @Override
@@ -127,30 +141,37 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
             // Aufbau der Verbindung
             httpURLConnection = (HttpURLConnection) url.openConnection();
 
+            //Passwort und Benutzername Eingabe
             Authenticator.setDefault(new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(strUserId, strPassword.toCharArray());
                 }
             });
 
+            //InputStream von Html Code
             InputStream inputStream = httpURLConnection.getInputStream();
 
+            //Wenn kein Code dann fehlgeschlagen
             if (inputStream == null) {
                 wrapper.success = false;
             }
+
+            //Abspeichern des Codes in STring
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String line;
             StringBuilder downloadBuilder = new StringBuilder();
 
             while ((line = bufferedReader.readLine()) != null) {
                 downloadBuilder.append(line).append("\n");
-                Log.v("MainActivity", "Line: " + line);
+                //Log.v("MainActivity", "Line: " + line);
             }
             String downloadStr = downloadBuilder.toString();
-            if (downloadStr.length() == 0) {
+            if (downloadStr.length() == 0) { //wenn String leer, dann fehlgeschlagen
                 wrapper.success = false;
             }
 
+            //Abbruch Handler kann beendet werden( dann wird er nicht ausgeführt), da wenn Programm
+            // an diesem Punkt angelangt dann kein Endlos Lade Bug
             abbruchLadeHandler.removeCallbacksAndMessages(null);
             Log.v("Asynktask", "Daten geladen");
 
@@ -162,21 +183,23 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                 wrapper.errorMessage = mContext.getString(R.string.vertretungs_error);
         }
         finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-                if (bufferedReader != null) {
-                    try {
-                        bufferedReader.close();
-                    } catch (final IOException e) {
-                        Log.e("DownloadData", "Error closing stream", e);
-                    }
+            //disconnecten
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (final IOException e) {
+                    Log.e("DownloadData", "Error closing stream", e);
                 }
             }
+        }
 
         return wrapper;
     }
 
+    //ALte Methode TODO: Umschreiben zu Json
     String processData(Document doc){
 
         try {
@@ -332,8 +355,10 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         super.onCancelled();
     }
 
+    //wird aufgerufen am Ende
     @Override
     protected void onPostExecute(DownloadWrapper wrapper) {
+        //Methode des übergebenen Interfaces wird aufgerufen und somit Wrapper an Activity oder Service zurückgegeben
         asyncTaskCompleteListener.onComplete(wrapper);
         super.onPostExecute(wrapper);
     }

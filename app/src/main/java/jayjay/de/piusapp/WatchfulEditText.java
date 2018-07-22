@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 
+//Subclass von EditText mit dem Zusatz dass es den Focus verliert wenn die Tastatur heruntergeklappt wird
+//brauchte ich beim Login bei der StartActivity
 public class WatchfulEditText extends android.support.v7.widget.AppCompatEditText {
 
     public WatchfulEditText(Context context, AttributeSet attrs) {

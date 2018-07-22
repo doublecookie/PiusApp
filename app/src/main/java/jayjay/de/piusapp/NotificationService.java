@@ -8,9 +8,13 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.PersistableBundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+//erst ab API 21 wegen JobScheduler
+//TODO NotificationService unter API 21
+@RequiresApi(21)
 public class NotificationService extends JobService {
 
     @Override
@@ -46,6 +50,7 @@ public class NotificationService extends JobService {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { //Android 8 und höher
 
+                //channel Id, der Channel wurde schon in der Start Activity registriert
                 String channel_id = getString(R.string.notification_channel_id);
                 notification = new NotificationCompat.Builder(this,channel_id);
             }
