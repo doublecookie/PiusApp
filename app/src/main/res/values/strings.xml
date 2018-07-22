@@ -3,10 +3,10 @@
 
     <string name="notification_channel_id">main_channel_id</string>
     <string name="notification_channel_name">notifications</string>
-    <string name="notification_channel_description">all notifications</string>
+    <string name="notification_channel_description">Alle Benachrichtigungen</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Öffne Übersicht</string>
+    <string name="navigation_drawer_close">Schließe Übersicht</string>
 
     <string name="nav_group_vtr_plan">Vertretungspläne</string>
     <string name="nav_dashboard">Dashboard</string>
@@ -23,10 +23,6 @@
     <string name="nav_settings">Einstellungen</string>
     <string name="nav_impressum">Impressum</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_start">StartActivity</string>
-
     <string name="vertretungs_error">Leider ist ein Fehler beim Darstellen aufgetreten\nAktualisiere um es erneut zu versuchen</string>
 
     <string name="username_text">Benutzername:</string>
@@ -35,6 +31,34 @@
     <string name="password_text">Passwort:</string>
     <string name="password">Passwort</string>
     <string name="password_explanation">Hier gibt ein super tolles Passwort rein</string>
+
+    <string name="impressum_developer_description">Pius App Entwickler:</string>
+    <string name="impressum_developer_1">Jacob Peters</string>
+    <string name="impressum_developer_2">Álvaro Winkels</string>
+    <string name="impressum_logo_description">Pius Logo Design:</string>
+    <string name="impressum_logo">Benedikt Seidl</string>
+
+    <string name="settings_refresh_appstart">Aktualisieren bei Appstart</string>
+    <string name="settings_short_terms">Kürze Begriffe wie \"Lehrkraft laut Plan\"</string>
+    <string name="settings_change_login">Ändere Login</string>
+    <string name="settings_login">Login</string>
+    <string name="settings_developer_crash">Crash App</string>
+
+    <string name="settings_background_refresh">Aktualisiere im Hintergrund</string>
+    <string name="settings_background_refresh_time">Aktualisiere alle </string>
+    <string name="settings_refresh_evening">Überblick über Vertretung für kommenden Tag um 18 Uhr</string>
+    <string name="settings_notification">Benachrichtigungen für deine Kurse</string>
+    <string name="settings_vibrate">Vibriere</string>
+    <string name="settings_heads_up">Blende Benachrichtigungen ein</string>
+    <string-array name="settings_refresh_time_options">
+        <item>5 min</item>
+        <item>10 min</item>
+        <item>20 min</item>
+        <item>30 min</item>
+        <item>1 Stunde</item>
+        <item>2 Stunden</item>
+        <item>3 Stunden</item>
+    </string-array>
 
     <string name="start_introduction">Bla bli blub ein paar Start Worte</string>
     <string name="start_introduction_comeback">Bla bli blub ein paar Start Worte falls du die Pius App schon installiert hattest</string>

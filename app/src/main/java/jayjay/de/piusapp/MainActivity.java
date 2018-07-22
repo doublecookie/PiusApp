@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //hi internet
     MenuItem mPreviousMenuItem;
     final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+
+    FloatingActionButton refreshFloatingButton;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkFirstRunSettingsApplied();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        refreshFloatingButton = findViewById(R.id.fab);
+        refreshFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 refresh();
@@ -89,12 +90,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_dashboard:
                 fragmentManager.beginTransaction().replace(R.id.content, new DashboardFragment()).commit();
+                refreshFloatingButton.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.nav_vtr_plan:
                 fragmentManager.beginTransaction().replace(R.id.content, new VertretungsplanFragment()).commit();
+                refreshFloatingButton.setVisibility(View.VISIBLE);
                 break;
 
+            case R.id.nav_settings:
+                fragmentManager.beginTransaction().replace(R.id.content, new SettingsFragment()).commit();
+                refreshFloatingButton.setVisibility(View.GONE);
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
