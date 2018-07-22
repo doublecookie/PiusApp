@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     final int REQUEST_EXIT = 100;
     final int RESULT_EXIT = 101;
+    final int RESULT_REFRESH = 201;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_EXIT && resultCode == RESULT_EXIT) finish();
+        if(resultCode == RESULT_REFRESH){
+
+        }
+        else if(requestCode == REQUEST_EXIT && resultCode == RESULT_EXIT) finish();
     }
 
     private void checkFirstRunSettingsApplied(){

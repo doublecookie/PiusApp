@@ -1,5 +1,6 @@
 package jayjay.de.piusapp;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.job.JobInfo;
@@ -25,12 +26,19 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -46,17 +54,21 @@ public class StartActivity extends AppCompatActivity {
     WatchfulEditText passwordEdit;
 
     DownloadData lastAsyncTask;
+    Activity thisActivity;
 
     boolean backAlreadyPressed = false;
     boolean testingInProgress = false;
     int state = 0;
 
     final int RESULT_EXIT = 101;
+    final int RESULT_REFRESH = 201;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        thisActivity = this;
 
         loginLinear = findViewById(R.id.login_linear);
         nextButton = findViewById(R.id.next_button);
@@ -65,6 +77,13 @@ public class StartActivity extends AppCompatActivity {
         appLogo = findViewById(R.id.app_logo);
         usernameEdit = findViewById(R.id.username_edit_text);
         passwordEdit = findViewById(R.id.password_edit_text);
+
+
+        if(readFromFile("version").length()>2){
+            startIntroduction.setText(getString(R.string.start_introduction_comeback));
+            usernameEdit.setText(readFromFile("login").split("\n")[0]);
+            passwordEdit.setText(readFromFile("login").split("\n")[1]);
+        }
 
         loginLinear.setVisibility(View.GONE);
         loading.setVisibility(View.INVISIBLE);
@@ -85,13 +104,33 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private AsyncTaskCompleteListener asyncTaskCompleteListener = new AsyncTaskCompleteListener() {
         @Override
         public void onComplete(DownloadWrapper data) {
             System.out.println("data.success = " + data.success);
             loading.setVisibility(View.GONE);
             if(data.success && state == 1){
+                hideKeyboard(thisActivity);
                 nextButton.setTextColor(getResources().getColor(R.color.colorAccent));
+                loginLinear.animate().alpha(0).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(200);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        appLogo.animate().translationY(-192).alpha(100).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(500);
+                    }
+                }, 200);
+                //TODO: animate Kurse Object to fly in
                 state++;
             }else if(!data.success){
                 //TODO: show user that it is the wrong password
@@ -178,7 +217,15 @@ public class StartActivity extends AppCompatActivity {
                 break;
 
             case 2:
-
+                if(false /*keine Kurse*/){
+                    //TODO: Warnmeldung
+                }else{
+                    editor.putBoolean("firstRunComplete", true);
+                    editor.commit();
+                    setResult(RESULT_REFRESH);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) finishAndRemoveTask();
+                    else this.finishAffinity();
+                }
                 break;
         }
     }
@@ -255,5 +302,34 @@ public class StartActivity extends AppCompatActivity {
         // Register the channel with the system; you can't change the importance
         // or other notifications behaviors after this
         notificationManager.createNotificationChannel(mChannel);
+    }
+
+    public String readFromFile(String filename) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = getApplicationContext().openFileInput(filename+".txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString).append("\n");
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("read file activity", "File("+filename+".txt) not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("read file activity", "Can not read file("+filename+".txt): " + e.toString());
+        }
+        return ret;
     }
 }
