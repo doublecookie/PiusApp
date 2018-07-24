@@ -44,48 +44,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/refresh_switch" />
 
             <Switch
-                android:id="@+id/change_log_switch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="12dp"
-                android:checked="false"
-                android:splitTrack="false"
-                android:text="@string/settings_show_change_new_version"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider_refresh_changelog"
-                tools:checked="false" />
-
-            <View
-                android:id="@+id/divider_changelog_short_term"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="12dp"
-                android:background="?android:attr/listDivider"
-                android:visibility="visible"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/change_log_switch" />
-
-            <Switch
                 android:id="@+id/short_term_switch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="12dp"
                 android:checked="false"
                 android:splitTrack="false"
                 android:text="@string/settings_short_terms"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider_changelog_short_term"
+                app:layout_constraintTop_toBottomOf="@+id/divider_refresh_changelog"
                 tools:checked="false" />
 
             <View
@@ -102,49 +72,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/short_term_switch" />
 
             <Switch
-                android:id="@+id/einhorn_switch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:splitTrack="false"
-                android:text="@string/settings_einhorn_option"
-                android:visibility="visible"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_short_term_einhorn"
-                tools:checked="false" />
-
-            <View
-                android:id="@+id/divider_einhorn_background"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="12dp"
-                android:background="?android:attr/listDivider"
-                android:visibility="visible"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/einhorn_switch" />
-
-            <Switch
                 android:id="@+id/background_refresh_switch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:splitTrack="false"
                 android:text="@string/settings_background_refresh"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_einhorn_background"
+                app:layout_constraintTop_toBottomOf="@+id/divider_short_term_einhorn"
                 tools:checked="false" />
 
             <TextView
@@ -166,71 +105,20 @@
                 android:layout_marginRight="16dp"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-            <TextView
-                android:id="@+id/warning_time_paradox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal"
-                android:text="@string/settings_warning_time_paradox"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/refresh_time_spinner" />
-
-            <Switch
-                android:id="@+id/refresh_night_switch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:splitTrack="false"
-                android:text="@string/settings_refresh_night"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/warning_time_paradox"
-                tools:checked="false" />
-
             <Switch
                 android:id="@+id/refresh_evening_switch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:splitTrack="false"
                 android:text="@string/settings_refresh_evening"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/refresh_night_switch"
+                app:layout_constraintTop_toBottomOf="@+id/refresh_time_spinner"
                 tools:checked="false" />
-
-            <TextView
-                android:id="@+id/estimated_data_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal"
-                android:text="@string/settings_estimated_data"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/refresh_evening_switch" />
 
             <View
                 android:id="@+id/divider_background_notification"
@@ -238,12 +126,11 @@
                 android:layout_height="1dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
-                android:layout_marginTop="12dp"
                 android:background="?android:attr/listDivider"
                 android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/estimated_data_text" />
+                app:layout_constraintTop_toBottomOf="@+id/refresh_evening_switch" />
 
             <Switch
                 android:id="@+id/notification_switch"
@@ -260,45 +147,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/divider_background_notification"
                 tools:checked="false" />
 
-            <TextView
-                android:id="@+id/notification_type_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/settings_type_notification"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBaseline_toBaselineOf="@+id/radio_notification_group" />
-
-            <RadioGroup
-                android:id="@+id/radio_notification_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:baselineAlignedChildIndex="0"
-                android:baselineAligned="true"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_switch"
-                android:gravity="start">
-
-                <RadioButton
-                    android:id="@+id/radio_short"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_notification_short"
-                    android:checked="true"/>
-
-                <RadioButton
-                    android:id="@+id/radio_long"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_notification_long"/>
-
-            </RadioGroup>
-
 
             <Switch
                 android:id="@+id/vibrate_switch"
@@ -314,7 +162,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radio_notification_group"
+                app:layout_constraintTop_toBottomOf="@+id/notification_switch"
                 tools:checked="false" />
 
             <Switch
@@ -364,31 +212,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:onClick="openLogin"
                 android:text="@string/settings_login"
                 app:layout_constraintBaseline_toBaselineOf="@+id/change_login_text"
-                app:layout_constraintRight_toRightOf="parent" />
-
-            <TextView
-                android:id="@+id/show_change_log_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/settings_change_log_text"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/change_login_text" />
-
-            <Button
-                android:id="@+id/change_log_button"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:onClick="showChangelog"
-                android:text="@string/settings_change_log"
-                app:layout_constraintBaseline_toBaselineOf="@+id/show_change_log_text"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <Button
@@ -396,36 +221,15 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="16dp"
-                android:onClick="throwTestError"
                 android:text="@string/settings_developer_crash"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/show_change_log_text" />
-
-            <Button
-                android:id="@+id/impressum_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="24dp"
-                android:onClick="openImpressum"
-                android:text="@string/settings_impressum"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/crash_button"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.100000024" />
-
+                app:layout_constraintTop_toBottomOf="@+id/change_login_text" />
 
 
         </android.support.constraint.ConstraintLayout>

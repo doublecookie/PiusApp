@@ -63,5 +63,7 @@
     <string name="start_introduction">Bla bli blub ein paar Start Worte</string>
     <string name="start_introduction_comeback">Bla bli blub ein paar Start Worte falls du die Pius App schon installiert hattest</string>
     <string name="start_next_page">Weiter</string>
+    <string name="title_activity_start">StartActivity</string>
+
 
 </resources>
