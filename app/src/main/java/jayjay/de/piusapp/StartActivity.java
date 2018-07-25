@@ -75,6 +75,7 @@ public class StartActivity extends AppCompatActivity {
     final int RESULT_REFRESH = 201;
 
     //Ich war hier
+    //Ich auch
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
