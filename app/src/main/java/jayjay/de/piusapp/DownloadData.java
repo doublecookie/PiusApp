@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
@@ -110,7 +113,6 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
             }
 
             if (!(dokumentString.equals("error") || dokumentString.equals(""))) {
-                dokumentString = "°" + aktuelleZeit + "\n" + dokumentString;
                 returnWrapper.downloadData = dokumentString;
                 returnWrapper.success = true;
             }
@@ -203,119 +205,84 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
     String processData(Document doc){
 
         try {
-            StringBuilder dokumentBuilder = new StringBuilder();
-
-            Element tickerElement = doc.select("div>p").first(); //tickertext
-            for (Element element : tickerElement.select("br")) {
-                element.replaceWith(new TextNode("§", doc.baseUri()));
-            }
-            String tickerText = tickerElement.text().replace('§', '\n');
-
+            JSONObject vertretungsPlan = new JSONObject();
 
             //ersetze <br>
             for (Element element : doc.select("br")) {
-                element.replaceWith(new TextNode("\n", doc.baseUri()));
+                element.replaceWith(new TextNode("\n"));
             }
             //ersetze <s>
             for (Element element : doc.select("s")) {
                 String StringErsetzerS = "^" + element.text() + "^";
-                TextNode textNodeErsetzerS = new TextNode(StringErsetzerS, doc.baseUri());
+                TextNode textNodeErsetzerS = new TextNode(StringErsetzerS);
                 element.replaceWith(textNodeErsetzerS);
             }
 
+            Element tickerElement = doc.select("div>p").first(); //tickertext
+            //element.replaceWith(new TextNode("§", doc.baseUri()));
+            //String tickerText = tickerElement.text().replace('§', '\n');
+            vertretungsPlan.put("ticker", tickerElement.text());
+
             Elements VDaten = doc.select("table"); //Tages Tabellen
-
-            //Alle Größen Herausfinden... #$@/ Java
-
-            int anzahlTage = VDaten.size(); //Anzahl Tage
-
-            String[] Datum = new String[anzahlTage];//Liste der Datums(._.) der Tabellen
-
-            String Aktualisierung = ""; //Letzte Aktualisierung (keine Liste)
-
-            String[] Betroffen = new String[anzahlTage];//Liste der Betroffenen Klassen
-
-            int[] anzahlKlassen = new int[anzahlTage];
-
-
-            int tagCounter = 0;
+            JSONArray tage = new JSONArray();
 
             for (Element tagDaten : VDaten) {
-                Datum[tagCounter] = tagDaten.previousElementSibling().previousElementSibling().previousElementSibling().previousElementSibling().text();
+                JSONObject tag = new JSONObject();
 
-                Betroffen[tagCounter] = tagDaten.previousElementSibling().text();
+                tag.put("tag", tagDaten.previousElementSibling().previousElementSibling().previousElementSibling().previousElementSibling().text());
+                tag.put("letzteAktualisierung", tagDaten.previousElementSibling().previousElementSibling().previousElementSibling().text());
+                tag.put("betroffen", tagDaten.previousElementSibling().text());
 
-                Aktualisierung = tagDaten.previousElementSibling().previousElementSibling().previousElementSibling().text();
+                JSONArray klassen = new JSONArray();
 
-                anzahlKlassen[tagCounter] = tagDaten.select("th.links").size();
+                for(Element klassenDaten : tagDaten.select("th.links")){
+                    JSONObject klasse = new JSONObject();
 
-                tagCounter++;
-            }
+                    klasse.put("klasse", klassenDaten.text());
 
-            for(String tickerline: tickerText.split("\\n")){
-                dokumentBuilder.append("€"+tickerline);
-                dokumentBuilder.append("\n");
-            }
-            dokumentBuilder.append("#");
-            dokumentBuilder.append(Aktualisierung);
-            dokumentBuilder.append("\n~");
-            dokumentBuilder.append(anzahlTage);
+                    JSONArray vertretungen = new JSONArray();
 
-            int i = 0;
-            for (Element tagDaten : VDaten) {
-                dokumentBuilder.append("\n_");
-                dokumentBuilder.append("\n#");
-                dokumentBuilder.append(Datum[i]);
-                dokumentBuilder.append("\n#");
-                dokumentBuilder.append(Betroffen[i]);
-                dokumentBuilder.append("\n~");
-                dokumentBuilder.append(anzahlKlassen[i]);
-
-                for (Element klasse : tagDaten.select("th.links")) {
-                    dokumentBuilder.append("\n*");
-                    dokumentBuilder.append(klasse.text());
-                    Element trElement = klasse.parent().nextElementSibling().nextElementSibling();
-                    int anzahlVertretung = 0;
-                    while (true) {
-                        try {
-                            if (trElement.child(0).hasClass("vertretung")) {
-                                trElement = trElement.nextElementSibling();
-                                anzahlVertretung++;
-                            } else {
-                                break;
-                            }
-                        } catch (Exception e) {
-                            break;
-                        }
-                    }
-                    dokumentBuilder.append("\n~");
-                    dokumentBuilder.append(anzahlVertretung);
-                    trElement = klasse.parent().nextElementSibling().nextElementSibling();
+                    Element trElement = klassenDaten.parent().nextElementSibling().nextElementSibling();
                     while (true) {
                         try {
                             if (trElement.child(0).hasClass("vertretung")||trElement.child(0).hasClass("vertretung neu")) {
-                                dokumentBuilder.append("\n-");
+
                                 for (Element tdVertretung : trElement.children()) {
-                                    dokumentBuilder.append("\n$");
                                     if (tdVertretung.hasClass("vertretung neu")) {
-                                        dokumentBuilder.append("%");
+                                        tdVertretung.text("%"+tdVertretung.text());
                                     }
-                                    dokumentBuilder.append(tdVertretung.text());
                                 }
-                                trElement = trElement.nextElementSibling();
-                            }
-                            else {
+
+                                JSONObject vertretung = new JSONObject();
+
+                                vertretung.put("stunden", trElement.child(0).text());
+                                vertretung.put("art", trElement.child(1).text());
+                                vertretung.put("kurs", trElement.child(2).text());
+                                vertretung.put("raum", trElement.child(3).text());
+                                vertretung.put("lehrerAktuell", trElement.child(4).text());
+                                vertretung.put("lehrerPlan", trElement.child(5).text());
+                                vertretung.put("bemerkung", trElement.child(6).text());
+
+                                JSONArray evas = new JSONArray();
+
                                 try{
                                     while(trElement.child(1).hasClass("eva")) {
-                                        dokumentBuilder.append("\n?");
-                                        dokumentBuilder.append(trElement.child(2).text());
+                                        evas.put(trElement.child(2).text());
                                         trElement = trElement.nextElementSibling();
                                     }
-
                                 }
                                 catch(Exception e){
                                     break;
                                 }
+
+                                vertretung.put("eva", evas);
+
+                                vertretungen.put(vertretung);
+
+                                trElement = trElement.nextElementSibling();
+                            }
+                            else {
+                                break;
                             }
 
                         } catch (Exception e) {
@@ -323,17 +290,35 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                             break;
                         }
                     }
+
+                    klasse.put("vertretungen", vertretungen);
+
+                    klassen.put(klasse);
                 }
 
-                i++;
+                tag.put("klassen", klassen);
+
+                tage.put(tag);
             }
-            dokumentBuilder.append("\n!");
-            Log.v("Asynktask", "Daten verarbeitet");
-            return dokumentBuilder.toString();
+            vertretungsPlan.put("tage", tage);
+
+            return vertretungsPlan.toString();
         }
         catch(Exception e){
             Log.e("AsyncTask:processData",e.toString());
             return "error";
+        }
+    }
+
+    public void writeToFile(String data,String filename) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(mContext.openFileOutput(filename, Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+            Log.v("Success","Wrote to "+filename);
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File("+filename+") write failed: " + e.toString());
         }
     }
 
@@ -358,6 +343,8 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
     //wird aufgerufen am Ende
     @Override
     protected void onPostExecute(DownloadWrapper wrapper) {
+        if(!mOnlyCheckConnection) writeToFile(wrapper.downloadData, mContext.getString(R.string.vertretungs_filename));
+        Log.v("vertretungsDaten", wrapper.downloadData);
         //Methode des übergebenen Interfaces wird aufgerufen und somit Wrapper an Activity oder Service zurückgegeben
         asyncTaskCompleteListener.onComplete(wrapper);
         super.onPostExecute(wrapper);
