@@ -1,13 +1,21 @@
 package jayjay.de.piusapp;
 
 
-import java.util.concurrent.atomic.AtomicInteger;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
-//Atomic Integer es gibt aber bestimmt bessere Möglichkeiten, wird also wahrscheinlich noch geändert
-//TODO ändern
 public class NotificationID {
-    private final static AtomicInteger c = new AtomicInteger(0);
-    public static int getID() {
-        return c.incrementAndGet();
+
+    public static int getID(Context mContext) {
+
+        //Shared Preferences für Einstellungen
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        int id = preferences.getInt("notificationID", 0);
+        editor.putInt("notificationID", id+1);
+        editor.apply();
+        return id;
     }
 }
