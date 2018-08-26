@@ -41,6 +41,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/*
+* TODO next button: ich möchte ohne kurse fortfahren
+* TODO Kurse + automatisches Laden
+* TODO Einstellungen + automatisches Laden
+ */
+
 public class StartActivity extends AppCompatActivity {
 
     //Shared Preferences
@@ -73,9 +79,6 @@ public class StartActivity extends AppCompatActivity {
     //RESULT Codes für setResult(CODE)
     final int RESULT_EXIT = 101;
     final int RESULT_REFRESH = 201;
-
-    //Ich war hier
-    //Ich auch
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +188,8 @@ public class StartActivity extends AppCompatActivity {
 
     public void next(View view){
         switch(state){
+
+
             case 0:
                 loginLinear.setVisibility(View.VISIBLE);
                 loginLinear.setAlpha(0f);
@@ -264,16 +269,19 @@ public class StartActivity extends AppCompatActivity {
                 state++;
                 break;
 
+
+
             case 1:
                 //TODO: Zeige dass weiter button nicht aktiv ist
                 break;
+
+
 
             case 2:
                 if(false /*keine Kurse*/){
                     //TODO: Warnmeldung
                 }else{
-                    editor.putBoolean("firstRunComplete", true);
-                    editor.commit();
+                    starteBackgroundTasks();
                     setResult(RESULT_REFRESH);
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) finishAndRemoveTask();
                     else this.finishAffinity();
@@ -327,15 +335,17 @@ public class StartActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createNotificationChannel();
 
         editor.putBoolean("firstRunComplete", true);
+        editor.commit();
     }
 
     @RequiresApi(21)
     private void scheduleJob(){
         JobScheduler jobScheduler = (JobScheduler)getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
 
-        ComponentName componentName = new ComponentName(this, UpdateJobStartService.class);
+        ComponentName componentName = new ComponentName(this, UpdateJobService.class);
 
-        JobInfo.Builder jobInfoBuilder = new JobInfo.Builder(1, componentName).setMinimumLatency(600000).setOverrideDeadline(900000)/*.setPeriodic(1200000).setPersisted(true).setBackoffCriteria(300000, JobInfo.BACKOFF_POLICY_EXPONENTIAL)*/;
+        JobInfo.Builder jobInfoBuilder = new JobInfo.Builder(1, componentName)/*.setMinimumLatency(6000).setOverrideDeadline(2000)*/.setPeriodic(preferences.getLong("RefreshIntervallTime", 1800000)).setPersisted(true).setBackoffCriteria(300000, JobInfo.BACKOFF_POLICY_EXPONENTIAL);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) jobInfoBuilder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NOT_ROAMING);
         JobInfo jobInfo = jobInfoBuilder.build();
         jobScheduler.schedule(jobInfo);
         Log.v("JobScheduler", "scheduled");

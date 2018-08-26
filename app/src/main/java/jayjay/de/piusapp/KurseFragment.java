@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 
 /**
- * noch leeres Fragment
- * hier wird mal die Kurse Auswahl reinkommen
+ * TODO Kurse
+ * TODO einfache Auswahl
  */
 public class KurseFragment extends Fragment {
 

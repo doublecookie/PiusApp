@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 
 /**
- * noch leeres Fragment
- * hier wird mal das Impressum reinkommen
+ * TODO Impressum
+ * //TODO: benutzte Bibliotheken
  */
 public class ImpressumFragment extends Fragment {
 

@@ -24,6 +24,7 @@
     <string name="nav_impressum">Impressum</string>
 
     <string name="vertretungs_error">Leider ist ein Fehler beim Darstellen aufgetreten\nAktualisiere um es erneut zu versuchen</string>
+    <string name="vertretungs_filename">vertretungsDaten.json</string>
 
     <string name="username_text">Benutzername:</string>
     <string name="username">Benutzername</string>
@@ -32,6 +33,7 @@
     <string name="password">Passwort</string>
     <string name="password_explanation">Hier gibt ein super tolles Passwort rein</string>
 
+    <string name="impressum_heading">Impressum</string>
     <string name="impressum_developer_description">Pius App Entwickler:</string>
     <string name="impressum_developer_1">Jacob Peters</string>
     <string name="impressum_developer_2">Álvaro Winkels</string>
@@ -43,16 +45,15 @@
     <string name="settings_change_login">Ändere Login</string>
     <string name="settings_login">Login</string>
     <string name="settings_developer_crash">Crash App</string>
-
     <string name="settings_background_refresh">Aktualisiere im Hintergrund</string>
     <string name="settings_background_refresh_time">Aktualisiere alle </string>
     <string name="settings_refresh_evening">Überblick über Vertretung für kommenden Tag um 18 Uhr</string>
     <string name="settings_notification">Benachrichtigungen für deine Kurse</string>
     <string name="settings_vibrate">Vibriere</string>
     <string name="settings_heads_up">Blende Benachrichtigungen ein</string>
+    <!--TODO: change time intervalls, if you do so don't forget to also change them in settingsFragment.java-->
     <string-array name="settings_refresh_time_options">
-        <item>5 min</item>
-        <item>10 min</item>
+        <item>15 min</item>
         <item>20 min</item>
         <item>30 min</item>
         <item>1 Stunde</item>
@@ -65,5 +66,23 @@
     <string name="start_next_page">Weiter</string>
     <string name="title_activity_start">StartActivity</string>
 
+    <string name="crashed_message_welcome">Leider ist ein schwerwiegender Fehler in der App aufgetreten\nVersuche eventuell die App nochmal zu öffnen oder setze die App komplett zurück</string>
+    <string name="crashed_message_contact_developers">Solltest du die Entwickler kennen, wäre es zur Verbesserung der Stabiltät der App hilfreich wenn du ihnen die Fehlermeldung zusendest</string>
+    <string name="crashed_clipboard">In Zwischenablage kopieren</string>
+    <string name="crashed_share">Teilen</string>
+    <string name="crashed_restart">Neustarten</string>
+    <string name="crashed_reset">PiusApp komplett zurücksetzen</string>
+    <string name="crashed_share_chooser_heading">Wie soll die Fehlermeldung an die Entwickler versandt werden?</string>
+
+    <string-array name="vertretungsplan_klassen_beschriftung">
+        <item>Std.</item>
+        <item>Art</item>
+        <item>Kurs</item>
+        <item>Raum</item>
+        <item>Akt.</item>
+        <item>Plan</item>
+        <item>Bemerkung</item>
+    </string-array>
+    <string name="eva">Auftrag:</string>
 
 </resources>

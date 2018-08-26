@@ -28,7 +28,7 @@ public class NotificationService extends JobService {
         String longText = extras.getString("longText");
 
         //immer eine andere id so dass sich notifications nicht auslöschen
-        int notificationId = NotificationID.getID();
+        int notificationId = NotificationID.getID(getApplicationContext());
 
         //methode
         displayNotification(titel, smallText, longText, notificationId);

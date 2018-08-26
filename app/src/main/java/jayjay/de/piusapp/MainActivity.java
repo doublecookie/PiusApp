@@ -1,5 +1,6 @@
 package jayjay.de.piusapp;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +15,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+/*
+* TODO starte mit vertretungsplan tab wenn keine kurse
+ */
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,12 +36,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     final int RESULT_EXIT = 101;
     final int RESULT_REFRESH = 201;
 
+    refreshInterface generalInterface;
+
+    public interface refreshInterface{
+        void aktualisiereDurchMainActivity();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //TODO: DefaultExceptionHandler sollte funktionieren tut es aber nicht und ich versteeeeehe nicht warum :(
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this)); //ALLE Fehler werden weitergeleitet und app crashed nicht
 
         //get SharedPreferences
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -50,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         refreshFloatingButton.setOnClickListener(new View.OnClickListener() { //on Click Listener damit der auch was machen kann
             @Override
             public void onClick(View view) {
-                refresh();
+                generalInterface.aktualisiereDurchMainActivity();
             }
         });
 
@@ -99,17 +113,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //und dann noch der Floating Action Button (un)sichtbar gemacht, je nach dem ob gebraucht oder nicht
         switch (id) {
             case R.id.nav_dashboard: //Dashboard
-                fragmentManager.beginTransaction().replace(R.id.content, new DashboardFragment()).commit();
+                DashboardFragment dashboardFragment = new DashboardFragment();
+                generalInterface = (refreshInterface) dashboardFragment;
+                fragmentManager.beginTransaction().replace(R.id.content, dashboardFragment).commit();
                 refreshFloatingButton.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.nav_vtr_plan: //Vertretungsplan
-                fragmentManager.beginTransaction().replace(R.id.content, new VertretungsplanFragment()).commit();
+                VertretungsplanFragment vertretungsplanFragment = new VertretungsplanFragment();
+                generalInterface = (refreshInterface) vertretungsplanFragment;
+                fragmentManager.beginTransaction().replace(R.id.content, vertretungsplanFragment).commit();
                 refreshFloatingButton.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.nav_stundenplan:
+                fragmentManager.beginTransaction().replace(R.id.content, new StundenplanFragment()).commit();
+                refreshFloatingButton.setVisibility(View.GONE);
+                break;
+
+            case R.id.nav_kurse:
+                fragmentManager.beginTransaction().replace(R.id.content, new KurseFragment()).commit();
+                refreshFloatingButton.setVisibility(View.GONE);
                 break;
 
             case R.id.nav_settings:
                 fragmentManager.beginTransaction().replace(R.id.content, new SettingsFragment()).commit();
+                refreshFloatingButton.setVisibility(View.GONE);
+                break;
+
+            case R.id.nav_impressum:
+                fragmentManager.beginTransaction().replace(R.id.content, new ImpressumFragment()).commit();
                 refreshFloatingButton.setVisibility(View.GONE);
                 break;
         }
@@ -124,24 +157,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_REFRESH) refresh();
+        if(resultCode == RESULT_REFRESH) generalInterface.aktualisiereDurchMainActivity();
         //Activity schließt sich wenn StartActivity geschlossen wird und StartActivity noch nicht durch war
         else if(requestCode == REQUEST_EXIT && resultCode == RESULT_EXIT) finish();
-    }
-
-    void refresh(){
-
     }
 
     private void checkFirstRunSettingsApplied(){
         //wenn SharedPreferences  "firstRunComplete" boolean noch nicht auf true gesetzt
         if(!preferences.getBoolean("firstRunComplete", false)){
 
+            //setze Einstellungen auf Standart Einstellungen
+            editor.putBoolean("RefreshOnAppStart", true);
+            editor.putBoolean("ShortenTerms", false);
+            editor.putBoolean("RefreshInBackground", true);
+            editor.putInt("RefreshTimeSelection", 2);
+            editor.putBoolean("OverviewAt6pm", true);
+            editor.putBoolean("Notifications", true);
+            editor.putBoolean("Vibrate", false);
+            editor.putBoolean("HeadsUp", false);
+            editor.putLong("RefreshIntervallTime", 1000 * 60 * 30);
+
             //öffne StartActivity
             Intent startIntent = new Intent(this, StartActivity.class);
             startActivityForResult(startIntent, REQUEST_EXIT);
 
         }
+    }
+
+    public void throwTestError(View view){
+        throw new SecurityException("Test error thrown in Settings only available for users with developers settings activated");
     }
 
 }

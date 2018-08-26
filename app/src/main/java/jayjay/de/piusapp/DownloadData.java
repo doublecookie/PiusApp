@@ -102,7 +102,6 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
             returnWrapper.success = htmlWrapper.success;
             return returnWrapper;
         }else{
-            //TODO: das hier hat noch nie gut funktiioniert, deshalb wechsel zur Speicherung des Planes in Json
             String dokumentString = "error";
             if (htmlWrapper.success) {
                 dokumentString = processData(Jsoup.parse(htmlWrapper.downloadData));
@@ -201,7 +200,6 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         return wrapper;
     }
 
-    //ALte Methode TODO: Umschreiben zu Json
     String processData(Document doc){
 
         try {
@@ -344,7 +342,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
     @Override
     protected void onPostExecute(DownloadWrapper wrapper) {
         if(!mOnlyCheckConnection) writeToFile(wrapper.downloadData, mContext.getString(R.string.vertretungs_filename));
-        Log.v("vertretungsDaten", wrapper.downloadData);
+        //Log.v("vertretungsDaten", wrapper.downloadData);
         //Methode des übergebenen Interfaces wird aufgerufen und somit Wrapper an Activity oder Service zurückgegeben
         asyncTaskCompleteListener.onComplete(wrapper);
         super.onPostExecute(wrapper);

@@ -1,8 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ImpressumFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/impressum_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/impressum_heading"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/impressum_heading">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/textDeveloper"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:text="@string/impressum_developer_description"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textDeveloper1"
+                    android:layout_width="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="3dip"
+                    android:text="@string/impressum_developer_1"
+                    android:textColor="@android:color/black" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/textDeveloper2"
+                    android:layout_width="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="3dip"
+                    android:text="@string/impressum_developer_2"
+                    android:textColor="@android:color/black" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/textLogo"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:text="@string/impressum_logo_description"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textLogoDesigner"
+                    android:layout_width="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="3dip"
+                    android:text="@string/impressum_logo"
+                    android:textColor="@android:color/black" />
+            </TableRow>
+
+            <TableRow>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 
 /**
- * Noch komplett leer
- * Hier kommt später das Dashboard hin
+ * TODO kopieren von Vertretungsplan
+ * TODO Kurse Algorithmus
  */
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements MainActivity.refreshInterface{
 
 
     public DashboardFragment() {
@@ -27,4 +27,8 @@ public class DashboardFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
+    @Override
+    public void aktualisiereDurchMainActivity() {
+
+    }
 }
