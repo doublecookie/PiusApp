@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".VertretungsplanFragment">
 
+    <!--TODO gebe allen layout views namen mit unterstrich anstelle von camel case-->
+
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_refresh"
@@ -19,83 +21,76 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-<!--TODO ticker und fehler view-->
-                <!--<TextView-->
-                    <!--android:id="@+id/fehler_view"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginEnd="24dp"-->
-                    <!--android:layout_marginLeft="24dp"-->
-                    <!--android:layout_marginRight="24dp"-->
-                    <!--android:layout_marginStart="24dp"-->
-                    <!--android:layout_marginTop="16dp"-->
-                    <!--android:text="@string/vertretungs_error"-->
-                    <!--android:visibility="visible"-->
-                    <!--android:gravity="center_horizontal"-->
-                    <!--app:layout_constraintHorizontal_bias="0.0"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent"-->
-                    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/last_update_view"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginEnd="24dp"-->
-                    <!--android:layout_marginLeft="24dp"-->
-                    <!--android:layout_marginRight="24dp"-->
-                    <!--android:layout_marginStart="24dp"-->
-                    <!--android:layout_marginTop="16dp"-->
-                    <!--android:text="@string/vertretungs_error_old"-->
-                    <!--android:visibility="gone"-->
-                    <!--android:gravity="center_horizontal"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent"-->
-                    <!--app:layout_constraintTop_toBottomOf="@id/fehler_view" />-->
+                <Space
+                    android:id="@+id/vertretungs_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+
+                <TextView
+                    android:id="@+id/fehler_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/vertretungs_error"
+                    android:visibility="gone"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vertretungs_space"/>
+
+                <TextView
+                    android:id="@+id/last_update_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/vertretungs_error"
+                    android:visibility="gone"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fehler_view" />
 
 
-                <!--<TextView-->
-                    <!--android:id="@+id/ticker_header"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="8dp"-->
-                    <!--android:layout_marginRight="8dp"-->
-                    <!--android:layout_marginTop="16dp"-->
-                    <!--android:text="Ticker-Text: "-->
-                    <!--android:textColor="@color/colorPrimary"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:visibility="invisible"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent"-->
-                    <!--app:layout_constraintTop_toBottomOf="@id/last_update_view" />-->
+                <TextView
+                    android:id="@+id/ticker_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/ticker"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:visibility="invisible"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/last_update_view" />
 
-                <!--<TextView-->
-                    <!--android:id="@+id/ticker_text"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="16dp"-->
-                    <!--android:layout_marginRight="16dp"-->
-                    <!--android:gravity="center_horizontal"-->
-                    <!--android:textSize="12sp"-->
-                    <!--android:visibility="invisible"-->
-                    <!--app:layout_constraintHorizontal_bias="0.0"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent"-->
-                    <!--app:layout_constraintTop_toBottomOf="@+id/ticker_header" />-->
+                <TextView
+                    android:id="@+id/ticker_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ticker_header" />
 
-                <!--<TextView-->
-                    <!--android:id="@+id/letzte_aktualisierung_text"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="8dp"-->
-                    <!--android:layout_marginRight="8dp"-->
-                    <!--android:layout_marginTop="8dp"-->
-                    <!--android:textSize="12sp"-->
-                    <!--android:visibility="invisible"-->
-                    <!--app:layout_constraintHorizontal_bias="0.501"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent"-->
-                    <!--app:layout_constraintTop_toBottomOf="@+id/ticker_text" />-->
 
                 <TableLayout
                     android:id="@+id/vertretungs_table"
@@ -103,14 +98,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="0dp"
                     android:paddingBottom="128dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-                    <!--app:layout_constraintTop_toBottomOf="@id/letzte_aktualisierung_text"-->
+                    app:layout_constraintTop_toBottomOf="@+id/ticker_text">
 
 
                 </TableLayout>

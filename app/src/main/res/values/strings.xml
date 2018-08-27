@@ -84,5 +84,6 @@
         <item>Bemerkung</item>
     </string-array>
     <string name="eva">Auftrag:</string>
+    <string name="ticker">Ticker-Text:</string>
 
 </resources>

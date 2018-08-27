@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -36,7 +35,7 @@ import java.io.InputStreamReader;
 
 
 /**
- * TODO: animation when table comes to existance
+ *
  */
 public class VertretungsplanFragment extends Fragment implements MainActivity.refreshInterface{
 
@@ -50,6 +49,10 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
     SwipeRefreshLayout mSwipeRefreshLayout;
     TableLayout vertretungsTable;
     View tableFadeView;
+
+    TextView tickerHeader;
+    TextView tickerTextView;
+    TextView fehlerView;
 
     int piusDarkColor;
     int piusColor;
@@ -78,8 +81,13 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
                 aktualisiere();
             }
         });
+
         vertretungsTable = getActivity().findViewById(R.id.vertretungs_table);
         tableFadeView = getActivity().findViewById(R.id.tableFadeView);
+
+        tickerHeader = getActivity().findViewById(R.id.ticker_header);
+        tickerTextView = getActivity().findViewById(R.id.ticker_text);
+        fehlerView = getActivity().findViewById(R.id.fehler_view);
 
         piusDarkColor = ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark);
         piusColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
@@ -94,8 +102,16 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
     private AsyncTaskCompleteListener asyncTaskCompleteListener = new AsyncTaskCompleteListener() {
         @Override
         public void onComplete(DownloadWrapper data) {
-            //TODO if(success)
-            erstelleLayout(data.downloadData);
+
+            if(data.success) {
+                fehlerView.setVisibility(View.GONE);
+                erstelleLayout(data.downloadData);
+            }else{
+                fehlerView.setText(data.errorMessage);
+                fehlerView.setVisibility(View.VISIBLE);
+                //TODO optimize error output
+            }
+
         }
     };
 
@@ -137,7 +153,11 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
                     String[] klassenBeschriftung = getActivity().getResources().getStringArray(R.array.vertretungsplan_klassen_beschriftung);
 
                     String tickerText = vertretungsplan.getString("ticker");
-                    //TODO setze tickerText
+                    if(!tickerText.equals("") && tickerText != null) {
+                        tickerHeader.setVisibility(View.VISIBLE);
+                        tickerTextView.setVisibility(View.VISIBLE);
+                        tickerTextView.setText(tickerText);
+                    }
 
                     JSONArray tage = vertretungsplan.getJSONArray("tage");
 
@@ -245,10 +265,6 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
                                 klassenBeschriftungRow.addView(beschriftungsTextView);
 
                                 if(k != klassenBeschriftung.length-1) {
-        //                            View divider = new View(klassenBeschriftungRow.getContext());
-        //                            divider.setLayoutParams(new TableRow.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
-        //                            divider.setBackgroundColor(weiss);
-        //                            klassenBeschriftungRow.addView(divider);
                                     layoutInflater.inflate(R.layout.divider, klassenBeschriftungRow);
                                 }
 
