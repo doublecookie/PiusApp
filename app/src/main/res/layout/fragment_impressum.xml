@@ -14,7 +14,7 @@
             android:id="@+id/impressum_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:text="@string/impressum_heading"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -27,6 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginLeft="24dp"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -65,32 +66,6 @@
                     android:padding="3dip"
                     android:text="@string/impressum_developer_2"
                     android:textColor="@android:color/black" />
-            </TableRow>
-
-            <TableRow android:layout_marginTop="8dp">
-
-                <TextView
-                    android:id="@+id/textLogo"
-                    android:layout_width="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_weight="1"
-                    android:padding="3dip"
-                    android:text="@string/impressum_logo_description"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:id="@+id/textLogoDesigner"
-                    android:layout_width="wrap_content"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:padding="3dip"
-                    android:text="@string/impressum_logo"
-                    android:textColor="@android:color/black" />
-            </TableRow>
-
-            <TableRow>
-
             </TableRow>
 
         </TableLayout>

@@ -29,6 +29,7 @@
 
     <string name="username_text">Benutzername:</string>
     <string name="username">Benutzername</string>
+    <!--TODO verbessere explanations-->
     <string name="username_explanation">Hier gibt ein super tolles Username rein</string>
     <string name="password_text">Passwort:</string>
     <string name="password">Passwort</string>
@@ -38,8 +39,12 @@
     <string name="impressum_developer_description">Pius App Entwickler:</string>
     <string name="impressum_developer_1">Jacob Peters</string>
     <string name="impressum_developer_2">Álvaro Winkels</string>
-    <string name="impressum_logo_description">Pius Logo Design:</string>
-    <string name="impressum_logo">Benedikt Seidl</string>
+
+    <string name="kurse_heading">Deine Klasse/Stufe/Kurse:</string>
+    <!--TODO verbessere keine_kurse-->
+    <string name="keine_kurse">Du hast noch nicht deine Kurse ausgewählt.\nWähle deine eigenen Kurse aus um auf dem Dashboard eine gekürztere Fassung des Vertretungsplans zu sehen und Benachrichtigungen zu bekommen.</string>
+    <string name="add_kurse">Neue Klasse/Stufe/Kurs hinzufügen</string>
+    <string name="kurse_filename">kurse.json</string>
 
     <string name="settings_refresh_appstart">Aktualisieren bei Appstart</string>
     <string name="settings_short_terms">Kürze Begriffe wie \"Lehrkraft laut Plan\"</string>
@@ -62,6 +67,7 @@
         <item>3 Stunden</item>
     </string-array>
 
+    <!--TODO verbessere Start Worte-->
     <string name="start_introduction">Bla bli blub ein paar Start Worte</string>
     <string name="start_introduction_comeback">Bla bli blub ein paar Start Worte falls du die Pius App schon installiert hattest</string>
     <string name="start_next_page">Weiter</string>

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -54,6 +55,8 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
     TextView tickerTextView;
     TextView fehlerView;
 
+    TextView lastUpdateView;
+
     int piusDarkColor;
     int piusColor;
     int weiss;
@@ -62,7 +65,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
     int evaGelb;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         layoutInflater = inflater;
@@ -70,7 +73,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mSwipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
@@ -83,11 +86,12 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
         });
 
         vertretungsTable = getActivity().findViewById(R.id.vertretungs_table);
-        tableFadeView = getActivity().findViewById(R.id.tableFadeView);
+        tableFadeView = getActivity().findViewById(R.id.table_fade_view);
 
         tickerHeader = getActivity().findViewById(R.id.ticker_header);
         tickerTextView = getActivity().findViewById(R.id.ticker_text);
         fehlerView = getActivity().findViewById(R.id.fehler_view);
+        lastUpdateView = getActivity().findViewById(R.id.last_update_view);
 
         piusDarkColor = ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark);
         piusColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
@@ -424,7 +428,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
         }, 500);
     }
 
-    public String readFromFile(String filename) {
+    String readFromFile(String filename) {
 
         String ret = "";
 

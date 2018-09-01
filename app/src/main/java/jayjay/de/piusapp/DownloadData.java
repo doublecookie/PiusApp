@@ -1,30 +1,30 @@
 package jayjay.de.piusapp;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
-import android.util.Log;
+        import android.content.Context;
+        import android.content.SharedPreferences;
+        import android.os.AsyncTask;
+        import android.os.Handler;
+        import android.os.Looper;
+        import android.preference.PreferenceManager;
+        import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
+        import org.json.JSONArray;
+        import org.json.JSONObject;
+        import org.jsoup.Jsoup;
+        import org.jsoup.nodes.Document;
+        import org.jsoup.nodes.Element;
+        import org.jsoup.nodes.TextNode;
+        import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
-import java.net.URL;
+        import java.io.BufferedReader;
+        import java.io.IOException;
+        import java.io.InputStream;
+        import java.io.InputStreamReader;
+        import java.io.OutputStreamWriter;
+        import java.net.Authenticator;
+        import java.net.HttpURLConnection;
+        import java.net.PasswordAuthentication;
+        import java.net.URL;
 
 //AsyncTask zum herunterladen von Daten
 public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
@@ -34,8 +34,8 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
     private AsyncTaskCompleteListener asyncTaskCompleteListener;
     private boolean mOnlyCheckConnection;
 
-    HttpURLConnection httpURLConnection = null;
-    BufferedReader bufferedReader = null;
+    private HttpURLConnection httpURLConnection = null;
+    private BufferedReader bufferedReader = null;
 
     //Shared Preferences Objecte um auf Einstellungen und Login zuzugreifen
     private SharedPreferences preferences;
@@ -117,7 +117,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         }
     }
 
-    DownloadWrapper loadHtmlCode(final String strUserId, final String strPassword, URL url) {
+    private DownloadWrapper loadHtmlCode(final String strUserId, final String strPassword, URL url) {
 
         //neuer Wrapper mit Standart Werten
         DownloadWrapper wrapper = new DownloadWrapper();
@@ -153,33 +153,34 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
             //Wenn kein Code dann fehlgeschlagen
             if (inputStream == null) {
                 wrapper.success = false;
+            }else {
+
+                //Abspeichern des Codes in STring
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String line;
+                StringBuilder downloadBuilder = new StringBuilder();
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    downloadBuilder.append(line).append("\n");
+                    //Log.v("MainActivity", "Line: " + line);
+                }
+                String downloadStr = downloadBuilder.toString();
+                if (downloadStr.length() == 0) { //wenn String leer, dann fehlgeschlagen
+                    wrapper.success = false;
+                }
+
+                //Abbruch Handler kann beendet werden( dann wird er nicht ausgeführt), da wenn Programm
+                // an diesem Punkt angelangt dann kein Endlos Lade Bug
+                abbruchLadeHandler.removeCallbacksAndMessages(null);
+                Log.v("Asynktask", "Daten geladen");
+
+                wrapper.downloadData = downloadStr;
             }
-
-            //Abspeichern des Codes in STring
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            String line;
-            StringBuilder downloadBuilder = new StringBuilder();
-
-            while ((line = bufferedReader.readLine()) != null) {
-                downloadBuilder.append(line).append("\n");
-                //Log.v("MainActivity", "Line: " + line);
-            }
-            String downloadStr = downloadBuilder.toString();
-            if (downloadStr.length() == 0) { //wenn String leer, dann fehlgeschlagen
-                wrapper.success = false;
-            }
-
-            //Abbruch Handler kann beendet werden( dann wird er nicht ausgeführt), da wenn Programm
-            // an diesem Punkt angelangt dann kein Endlos Lade Bug
-            abbruchLadeHandler.removeCallbacksAndMessages(null);
-            Log.v("Asynktask", "Daten geladen");
-
-            wrapper.downloadData = downloadStr;
         }
         catch (IOException e) {
             Log.e("DownloadData:loadhtml", "ConnectionError: " + e.toString());
-                wrapper.success = false;
-                wrapper.errorMessage = mContext.getString(R.string.vertretungs_error);
+            wrapper.success = false;
+            wrapper.errorMessage = mContext.getString(R.string.vertretungs_error);
         }
         finally {
             //disconnecten
@@ -198,15 +199,11 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         return wrapper;
     }
 
-    String processData(Document doc){
+    private String processData(Document doc){
 
         try {
             JSONObject vertretungsPlan = new JSONObject();
 
-            //ersetze <br>
-            for (Element element : doc.select("br")) {
-                element.replaceWith(new TextNode("\n"));
-            }
             //ersetze <s>
             for (Element element : doc.select("s")) {
                 String StringErsetzerS = "^" + element.text() + "^";
@@ -215,9 +212,16 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
             }
 
             Element tickerElement = doc.select("div>p").first(); //tickertext
-            //element.replaceWith(new TextNode("§", doc.baseUri()));
-            //String tickerText = tickerElement.text().replace('§', '\n');
-            vertretungsPlan.put("ticker", tickerElement.text());
+            //ersetze <br> im tickerText
+            for (Element element : tickerElement.select("br")) {
+                element.replaceWith(new TextNode("§br2nl§"));
+            }
+            vertretungsPlan.put("ticker", tickerElement.text().replace("§br2nl§", "\n"));
+
+            //ersetze <br>
+            for (Element element : doc.select("br")) {
+                element.replaceWith(new TextNode("\n"));
+            }
 
             Elements VDaten = doc.select("table"); //Tages Tabellen
             JSONArray tage = new JSONArray();
@@ -306,7 +310,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         }
     }
 
-    public void writeToFile(String data,String filename) {
+    private void writeToFile(String data,String filename) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(mContext.openFileOutput(filename, Context.MODE_PRIVATE));
             outputStreamWriter.write(data);

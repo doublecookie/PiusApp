@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 /*
 * TODO starte mit vertretungsplan tab wenn keine kurse
+* TODO aktualisiere on App Start
 * TODO onBackPressed
 * TODO rote zahlen an app
 * TODO badges

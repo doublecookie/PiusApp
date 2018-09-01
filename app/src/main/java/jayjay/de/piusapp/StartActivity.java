@@ -44,6 +44,7 @@ import java.io.InputStreamReader;
 /*
 * TODO next button: ich möchte ohne kurse fortfahren
 * TODO Kurse + automatisches Laden
+* TODO Stundenplan + pdf laden
 * TODO Einstellungen + automatisches Laden
  */
 
@@ -371,7 +372,7 @@ public class StartActivity extends AppCompatActivity {
         notificationManager.createNotificationChannel(mChannel);
     }
 
-    public String readFromFile(String filename) {
+    String readFromFile(String filename) {
 
         String ret = "";
 
