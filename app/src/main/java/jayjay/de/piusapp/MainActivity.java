@@ -18,6 +18,9 @@ import android.view.MenuItem;
 
 /*
 * TODO starte mit vertretungsplan tab wenn keine kurse
+* TODO onBackPressed
+* TODO rote zahlen an app
+* TODO badges
  */
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

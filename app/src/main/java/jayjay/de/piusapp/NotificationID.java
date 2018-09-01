@@ -7,8 +7,9 @@ import android.preference.PreferenceManager;
 
 public class NotificationID {
 
-    public static int getID(Context mContext) {
+    //TODO: ggf überflüssige klasse: code könnte man auch direkt so in NotificationService implementieren
 
+    public static int getID(Context mContext) {
         //Shared Preferences für Einstellungen
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = preferences.edit();

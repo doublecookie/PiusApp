@@ -23,6 +23,7 @@
     <string name="nav_settings">Einstellungen</string>
     <string name="nav_impressum">Impressum</string>
 
+    <string name="url">https://www.pius-gymnasium.de/vertretungsplan/</string>
     <string name="vertretungs_error">Leider ist ein Fehler beim Darstellen aufgetreten\nAktualisiere um es erneut zu versuchen</string>
     <string name="vertretungs_filename">vertretungsDaten.json</string>
 

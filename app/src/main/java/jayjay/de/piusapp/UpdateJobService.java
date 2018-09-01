@@ -32,7 +32,7 @@ public class UpdateJobService extends JobService{
     private AsyncTaskCompleteListener asyncTaskCompleteListener = new AsyncTaskCompleteListener() {
         @Override
         public void onComplete(DownloadWrapper data) {//Methode wird am Ende des Async Tasks aufgerufen
-            //createNotification("test",data,data);
+            // TODO: createNotification("test",data,data);
         }
     };
 

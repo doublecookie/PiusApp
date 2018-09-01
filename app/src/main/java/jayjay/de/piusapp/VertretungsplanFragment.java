@@ -231,7 +231,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
 
                             TableRow klassenRow = new TableRow(vertretungsTable.getContext());
                             TableLayout.LayoutParams klassenRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            klassenRowParams.setMargins(0,64,0,5);
+                            klassenRowParams.setMargins(0,64,0,3);
                             klassenRow.setBackgroundColor(piusDarkColor);
                             klassenRow.setLayoutParams(klassenRowParams);
 
@@ -291,7 +291,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
 
                                 TableRow vertretungsRow = new TableRow(vertretungsTable.getContext());
                                 TableLayout.LayoutParams vertretungsRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                vertretungsRowParams.setMargins(0,5,0,0);
+                                vertretungsRowParams.setMargins(0,3,0,0);
                                 vertretungsRow.setBackgroundColor(piusColor);
                                 vertretungsRow.setLayoutParams(vertretungsRowParams);
 
@@ -434,7 +434,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
+                String receiveString;
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ( (receiveString = bufferedReader.readLine()) != null ) {

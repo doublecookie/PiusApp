@@ -78,8 +78,6 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
         String aktuelleZeit = System.currentTimeMillis() + "";
 
-        String strURL = "http://pius-gymnasium.de/vertretungsplan/";
-
         //Object des DownloadWrappers welches ganz am Ende zurückgegeben wird
         DownloadWrapper returnWrapper = new DownloadWrapper();
         returnWrapper.downloadData = "";
@@ -90,7 +88,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
         htmlWrapper.success = false;
 
         try {
-            URL url = new URL(strURL);
+            URL url = new URL(mContext.getString(R.string.url));
             htmlWrapper = loadHtmlCode(username, password, url); //htmlWrapper wird gefüllt mit Methode loadHtmlCode
         } catch (Exception e) {
             Log.e("DownloadData:loadHtml", e.toString());
