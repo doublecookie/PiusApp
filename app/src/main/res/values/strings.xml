@@ -42,9 +42,16 @@
 
     <string name="kurse_heading">Deine Klasse/Stufe/Kurse:</string>
     <!--TODO verbessere keine_kurse-->
-    <string name="keine_kurse">Du hast noch nicht deine Kurse ausgewählt.\nWähle deine eigenen Kurse aus um auf dem Dashboard eine gekürztere Fassung des Vertretungsplans zu sehen und Benachrichtigungen zu bekommen.</string>
+    <string name="keine_kurse">Du hast noch nicht deine Kurse ausgewählt.\nWähle deine eigenen Kurse aus um auf dem Dashboard eine gekürzte Fassung des Vertretungsplans zu sehen und Benachrichtigungen zu bekommen.</string>
     <string name="add_kurse">Neue Klasse/Stufe/Kurs hinzufügen</string>
     <string name="kurse_filename">kurse.json</string>
+    <string name="dialog_add_title_stufe">Wähle deine Stufe:</string>
+    <string name="dialog_add_title_klasse">Wähle deine Stufe und Klasse:</string>
+    <string name="dialog_add_title_kurs">Wähle deine Stufe oder Kurs:</string>
+    <string name="dialog_edit_title_stufe">Bearbeite deine Stufe:</string>
+    <string name="dialog_edit_title_klasse">Bearbeite deine Stufe und Klasse:</string>
+    <string name="dialog_edit_title_kurs">Bearbeite deine Stufe oder Kurs:</string>
+    <string name="dialog_explanation_kurs">Du kannst entweder die ganze Stufe oder all deine eigenen Kurse auswählen</string>
 
     <string name="settings_refresh_appstart">Aktualisieren bei Appstart</string>
     <string name="settings_short_terms">Kürze Begriffe wie \"Lehrkraft laut Plan\"</string>

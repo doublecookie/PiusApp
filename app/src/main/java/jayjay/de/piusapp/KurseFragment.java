@@ -1,7 +1,9 @@
 package jayjay.de.piusapp;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -70,7 +74,7 @@ public class KurseFragment extends Fragment {
         addKurse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addKurs();
+                openEmptyAddDialog();
             }
         });
     }
@@ -92,22 +96,64 @@ public class KurseFragment extends Fragment {
             keineKurseInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addKurs();
+                    openEmptyAddDialog();
                 }
             });
         }
         else if(!kurse.equals("error")){
             keineKurseInfo.setVisibility(View.GONE);
             erstelleKurseList(kurse);
+    }
+    }
+
+    void openEmptyAddDialog(){
+        openAddDialog(null);
+    }
+
+    void openAddDialog(JSONObject kurs){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+
+        View dialogView = inflater.inflate(R.layout.dialog, null, false);
+
+        try {
+            if (kurs != null) {
+
+                if (kurs.getBoolean("hasKlasse")){
+                    builder.setTitle(getString(R.string.dialog_edit_title_klasse));
+                }
+                else if(kurs.getBoolean("hasKurs")){
+                    builder.setTitle(getString(R.string.dialog_edit_title_kurs));
+                }
+                else{
+                    builder.setTitle(getString(R.string.dialog_edit_title_stufe));
+                }
+            } else {
+
+                builder.setTitle(getString(R.string.dialog_add_title_stufe));
+            }
         }
-    }
+        catch(Exception e){
+            Log.e("openAddDialog", e.toString());
+        }
 
-    void addKurs(){
+        builder.setView(dialogView);
 
-    }
+        builder.setPositiveButton(getString(R.string.add_kurs), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-    void edit(JSONObject kurs){
+            }
+        });
+        builder.setNegativeButton(getString(R.string.kurse_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
     }
 
     void speichereKurseListe(){
@@ -179,7 +225,7 @@ public class KurseFragment extends Fragment {
                             @Override
                             public void onClick(View view) {
                                 kurseList.removeView(linearLayout);
-                                edit(linearLayout.getJsonObject());
+                                openAddDialog(linearLayout.getJsonObject());
                             }
                         });
 
