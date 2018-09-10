@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 /**
  * TODO Kurse
@@ -50,6 +52,9 @@ public class KurseFragment extends Fragment {
     TextView keineKurseInfo;
     Button addKurse;
     LinearLayout kurseList;
+
+    boolean stufePickerOngoingScroll;
+    boolean klassePickerOngoingScroll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +96,8 @@ public class KurseFragment extends Fragment {
 
         String kurse = readFromFile(getString(R.string.kurse_filename));
 
+        Log.v("Kurse:",kurse);
+
         if(kurse.length() == 0 || kurse.equals("noFile")){
             keineKurseInfo.setVisibility(View.VISIBLE);
             keineKurseInfo.setOnClickListener(new View.OnClickListener() {
@@ -100,10 +107,34 @@ public class KurseFragment extends Fragment {
                 }
             });
         }
-        else if(!kurse.equals("error")){
-            keineKurseInfo.setVisibility(View.GONE);
-            erstelleKurseList(kurse);
-    }
+        else {
+            try{
+                JSONArray kurseArray = new JSONArray(kurse);
+                if(!kurse.equals("error") && kurseArray.length() > 0){
+                    keineKurseInfo.setVisibility(View.GONE);
+                    erstelleKurseList(kurse);
+                }
+                else {
+                    keineKurseInfo.setVisibility(View.VISIBLE);
+                    keineKurseInfo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            openEmptyAddDialog();
+                        }
+                    });
+                }
+            }
+            catch(Exception e){
+                Log.v("KurseOnResumeJSONArray", e.toString());
+                keineKurseInfo.setVisibility(View.VISIBLE);
+                keineKurseInfo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openEmptyAddDialog();
+                    }
+                });
+            }
+        }
     }
 
     void openEmptyAddDialog(){
@@ -118,20 +149,102 @@ public class KurseFragment extends Fragment {
 
 
         View dialogView = inflater.inflate(R.layout.dialog, null, false);
+        final NumberPicker stufePicker = dialogView.findViewById(R.id.stufe_picker);
+        final NumberPicker klassePicker = dialogView.findViewById(R.id.klasse_picker);
+        final NumberPicker kursTypePicker = dialogView.findViewById(R.id.kurs_type_picker);
+        final NumberPicker kursZahlPicker = dialogView.findViewById(R.id.kurs_number_picker);
+
+        final TextView kursExplanationText = dialogView.findViewById(R.id.kurs_explanation_text);
+
+        final String[] valuesStufe = getResources().getStringArray(R.array.stufen);
+        final String[] valuesKlasse = getResources().getStringArray(R.array.klassen);
+        final String[] valuesKurseFach = getResources().getStringArray(R.array.kurse_fach);
+        final String[] valuesKurseTypeEF = getResources().getStringArray(R.array.kurse_type_EF);
+        final String[] valuesKurseTypeQ1 = getResources().getStringArray(R.array.kurse_type_Q1);
+        final String[] valuesKurseTypeQ2 = getResources().getStringArray(R.array.kurse_type_Q2);
+        final String[] valuesKurseZahl = getResources().getStringArray(R.array.kurse_zahl);
+
+        stufePicker.setWrapSelectorWheel(true);
+        stufePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        stufePicker.setMinValue(0);
+
+        klassePicker.setWrapSelectorWheel(true);
+        klassePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        klassePicker.setMinValue(0);
+
+        kursTypePicker.setWrapSelectorWheel(true);
+        kursTypePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        kursTypePicker.setMinValue(0);
+
+        kursZahlPicker.setWrapSelectorWheel(true);
+        kursZahlPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        kursZahlPicker.setMinValue(0);
+
+        setNumberPickerValues(stufePicker, valuesStufe);
+     
+        setNumberPickerValues(kursZahlPicker, valuesKurseZahl);
 
         try {
             if (kurs != null) {
 
+                stufePicker.setValue(Arrays.asList(valuesStufe).indexOf(kurs.getString("stufe")));
+
                 if (kurs.getBoolean("hasKlasse")){
+                    kursExplanationText.setVisibility(View.GONE);
+
                     builder.setTitle(getString(R.string.dialog_edit_title_klasse));
+                    kursTypePicker.setVisibility(View.GONE);
+                    kursZahlPicker.setVisibility(View.GONE);
+
+                    setNumberPickerValues(klassePicker,valuesKlasse);
+    
+                    klassePicker.setValue(Arrays.asList(valuesKlasse).indexOf(kurs.getString("klasse")));
                 }
                 else if(kurs.getBoolean("hasKurs")){
+                    kursExplanationText.setVisibility(View.GONE);
+
                     builder.setTitle(getString(R.string.dialog_edit_title_kurs));
+
+                    setNumberPickerValues(klassePicker,valuesKurseFach);
+ 
+                    klassePicker.setValue(Arrays.asList(valuesKurseFach).indexOf(kurs.getString("klasse")));
+
+                    if(kurs.getString("stufe").equals("EF")){
+                        setNumberPickerValues(kursTypePicker, valuesKurseTypeEF);
+                        kursTypePicker.setValue(Arrays.asList(valuesKurseTypeEF).indexOf(kurs.getString("kursType")));
+                    }
+                    else if(kurs.getString("stufe").equals("Q1")){
+                        setNumberPickerValues(kursTypePicker, valuesKurseTypeQ1);
+                        kursTypePicker.setValue(Arrays.asList(valuesKurseTypeQ1).indexOf(kurs.getString("kursType")));
+                    }
+                    else if(kurs.getString("stufe").equals("Q2")){
+                        setNumberPickerValues(kursTypePicker, valuesKurseTypeQ2);
+                        kursTypePicker.setValue(Arrays.asList(valuesKurseTypeQ2).indexOf(kurs.getString("kursType")));
+                    }
+
+                    kursZahlPicker.setValue(Arrays.asList(valuesKurseZahl).indexOf(kurs.getString("kursZahl")));
                 }
                 else{
                     builder.setTitle(getString(R.string.dialog_edit_title_stufe));
+
+                    kursExplanationText.setVisibility(View.VISIBLE);
+
+                    setNumberPickerValues(klassePicker, valuesKurseFach);
+ 
+                    klassePicker.setValue(0);
+
+                    kursTypePicker.setVisibility(View.GONE);
+                    kursZahlPicker.setVisibility(View.GONE);
                 }
             } else {
+                kursExplanationText.setVisibility(View.GONE);
+
+                setNumberPickerValues(klassePicker, valuesKlasse);
+    
+                klassePicker.setValue(0);
+
+                kursTypePicker.setVisibility(View.GONE);
+                kursZahlPicker.setVisibility(View.GONE);
 
                 builder.setTitle(getString(R.string.dialog_add_title_stufe));
             }
@@ -140,20 +253,193 @@ public class KurseFragment extends Fragment {
             Log.e("openAddDialog", e.toString());
         }
 
+        final NumberPicker.OnValueChangeListener klasseValueListener = new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+
+            }
+        };
+
+        final NumberPicker.OnValueChangeListener kurseFachValueListener = new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                if(newVal == 0 && klassePickerOngoingScroll){
+                    kursTypePicker.setVisibility(View.GONE);
+                    kursZahlPicker.setVisibility(View.GONE);
+                    kursExplanationText.setVisibility(View.VISIBLE);
+                }else{
+                    if(oldVal==0){
+                        kursTypePicker.setVisibility(View.VISIBLE);
+                        kursZahlPicker.setVisibility(View.VISIBLE);
+                        kursExplanationText.setVisibility(View.GONE);
+                    }
+                }
+            }
+        };
+
+        stufePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                int change = 0;
+                int stufeEF = Arrays.asList(valuesStufe).indexOf("EF");
+                int stufeQ1 = Arrays.asList(valuesStufe).indexOf("Q1");
+                int stufeQ2 = Arrays.asList(valuesStufe).indexOf("Q2");
+                int stufe5 = Arrays.asList(valuesStufe).indexOf("5");
+                int stufe9 = Arrays.asList(valuesStufe).indexOf("9");
+                int stufeIKE = Arrays.asList(valuesStufe).indexOf("IKE");
+                int stufeIKD = Arrays.asList(valuesStufe).indexOf("IKD");
+
+                if(newVal == stufeIKD || newVal == stufeIKE) change = 1;
+                else if(newVal >= stufeEF && newVal <= stufeQ2) change = 2;
+                else if(newVal >= stufe5 && newVal <= stufe9) change = 3;
+
+                switch (change){
+                    case 1:
+                        klassePicker.setVisibility(View.GONE);
+                        kursTypePicker.setVisibility(View.GONE);
+                        kursZahlPicker.setVisibility(View.GONE);
+                        kursExplanationText.setVisibility(View.GONE);
+                        break;
+
+                    case 2:
+                        klassePicker.setVisibility(View.VISIBLE);
+                        setNumberPickerValues(klassePicker, valuesKurseFach);
+                        klassePicker.setOnValueChangedListener(kurseFachValueListener);
+
+                        if(oldVal < stufeEF || oldVal > stufeQ2) klassePicker.setValue(0);
+
+                        kursTypePicker.setValue(0);
+                        kursZahlPicker.setValue(0);
+                        if(klassePicker.getValue()==0) kursExplanationText.setVisibility(View.VISIBLE);
+                        break;
+
+                    case 3:
+                        klassePicker.setVisibility(View.VISIBLE);
+                        setNumberPickerValues(klassePicker, valuesKlasse);
+                        klassePicker.setOnValueChangedListener(klasseValueListener);
+
+                        kursTypePicker.setVisibility(View.GONE);
+                        kursZahlPicker.setVisibility(View.GONE);
+                        kursExplanationText.setVisibility(View.GONE);
+                        break;
+                }
+
+                if(newVal == stufeEF){
+                    setNumberPickerValues(kursTypePicker, valuesKurseTypeEF);
+                }
+                else if(newVal == stufeQ1){
+                    setNumberPickerValues(kursTypePicker, valuesKurseTypeQ1);
+                }
+                else if(newVal == stufeQ2){
+                    setNumberPickerValues(kursTypePicker, valuesKurseTypeQ2);
+                }
+            }
+        });
+
+        stufePickerOngoingScroll = false;
+        klassePickerOngoingScroll = false;
+
+        stufePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker numberPicker, int scrollState) {
+                stufePickerOngoingScroll = (scrollState==SCROLL_STATE_IDLE);
+            }
+        });
+        klassePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker numberPicker, int scrollState) {
+                klassePickerOngoingScroll = (scrollState==SCROLL_STATE_IDLE);
+                if(scrollState == SCROLL_STATE_IDLE) {
+                    try{
+                        kurseFachValueListener.onValueChange(klassePicker,klassePicker.getValue(),klassePicker.getValue());
+                    }catch(Exception e){Log.e("OnScrollListenerAddKurs", e.toString());}
+                }
+            }
+        });
+
         builder.setView(dialogView);
 
         builder.setPositiveButton(getString(R.string.add_kurs), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                try{
+                    JSONArray kurse = new JSONArray(readFromFile(getString(R.string.kurse_filename)));
+                    JSONObject neuerKurs = new JSONObject();
+                    
+                    int stufeValue = stufePicker.getValue();
 
+                    int change = 0;
+                    int stufeEF = Arrays.asList(valuesStufe).indexOf("EF");
+                    int stufeQ2 = Arrays.asList(valuesStufe).indexOf("Q2");
+                    int stufe5 = Arrays.asList(valuesStufe).indexOf("5");
+                    int stufe9 = Arrays.asList(valuesStufe).indexOf("9");
+                    int stufeIKE = Arrays.asList(valuesStufe).indexOf("IKE");
+                    int stufeIKD = Arrays.asList(valuesStufe).indexOf("IKD");
+
+                    if(stufeValue == stufeIKD || stufeValue == stufeIKE) change = 1;
+                    else if(stufeValue >= stufeEF && stufeValue <= stufeQ2) change = 2;
+                    else if(stufeValue >= stufe5 && stufeValue <= stufe9) change = 3;
+
+                    switch (change){
+                        case 1:
+                            neuerKurs.put("hasKurs", false);
+                            neuerKurs.put("hasKlasse", false);
+                            neuerKurs.put("stufe", valuesStufe[stufePicker.getValue()]);
+                            break;
+
+                        case 2:
+                            neuerKurs.put("hasKlasse", false);
+                            neuerKurs.put("stufe", valuesStufe[stufePicker.getValue()]);
+                            if(klassePicker.getValue() == 0) {
+                                neuerKurs.put("hasKurs", false);
+                            }
+                            else{
+                                neuerKurs.put("hasKurs", true);
+                                neuerKurs.put("klasse", valuesKurseFach[klassePicker.getValue()]);
+                                neuerKurs.put("kursType", valuesKurseTypeQ2[kursTypePicker.getValue()]);
+                                neuerKurs.put("kursZahl", valuesKurseZahl[kursZahlPicker.getValue()]);
+                            }
+                            break;
+
+                        case 3:
+                            neuerKurs.put("hasKlasse", true);
+                            neuerKurs.put("hasKurs", false);
+                            neuerKurs.put("stufe", valuesStufe[stufePicker.getValue()]);
+                            neuerKurs.put("klasse", valuesKlasse[klassePicker.getValue()]);
+                            break;
+                    }
+
+                    kurse.put(neuerKurs);
+                    writeToFile(kurse.toString(), getString(R.string.kurse_filename));
+                    erstelleKurseList(kurse.toString());
+                    
+                }
+                catch(Exception e){
+                    Log.e("addKurseSpeichern", e.toString());
+                }
+
+                dialogInterface.dismiss();
             }
         });
-        builder.setNegativeButton(getString(R.string.kurse_cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel_kurs), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                dialogInterface.dismiss();
             }
         });
+
+        builder.show();
+    }
+    
+    void setNumberPickerValues(NumberPicker numberPicker, String[] values){
+        if(numberPicker.getMaxValue() < values.length){
+            numberPicker.setDisplayedValues(values);
+            numberPicker.setMaxValue(values.length-1);
+        }
+        else {
+            numberPicker.setMaxValue(values.length-1);
+            numberPicker.setDisplayedValues(values);
+        } 
     }
 
     void speichereKurseListe(){
@@ -166,7 +452,7 @@ public class KurseFragment extends Fragment {
 
     void erstelleKurseList(final String data){
 
-        kurseList.animate().alpha(0f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+        kurseList.animate().alpha(0f).setDuration(300).setInterpolator(new AccelerateDecelerateInterpolator());
 
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -187,7 +473,7 @@ public class KurseFragment extends Fragment {
                             else kursText = kurs.getString("stufe");
                         }
                         else{
-                            kursText = kurs.getString("stufe") + " " + kurs.getString("kurs");
+                            kursText = kurs.getString("stufe") + " " + kurs.getString("klasse") + " " + kurs.getString("kursType") + kurs.getString("kursZahl");
                         }
 
                         final LinearLayoutWithJSONObject linearLayout = new LinearLayoutWithJSONObject(kurseList.getContext(), kurs);
@@ -240,6 +526,8 @@ public class KurseFragment extends Fragment {
                         linearLayout.addView(edit);
                         linearLayout.addView(remove);
 
+                        //TODO make edit and remove button work
+
                         kurseList.addView(linearLayout);
 
                     }
@@ -260,12 +548,12 @@ public class KurseFragment extends Fragment {
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            child.animate().alpha(1f).translationY(0f).setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
+                            child.animate().alpha(1f).translationY(0f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
                         }
-                    }, i * 500);
+                    }, i * 100);
                 }
             }
-        }, 500);
+        }, 300);
     }
 
     void writeToFile(String data,String filename) {
@@ -273,7 +561,7 @@ public class KurseFragment extends Fragment {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getActivity().openFileOutput(filename, Context.MODE_PRIVATE));
             outputStreamWriter.write(data);
             outputStreamWriter.close();
-            Log.v("Success","Wrote to "+filename);
+            Log.v("Success","Wrote to "+filename+":"+data);
         }
         catch (IOException e) {
             Log.e("Exception", "File("+filename+") write failed: " + e.toString());

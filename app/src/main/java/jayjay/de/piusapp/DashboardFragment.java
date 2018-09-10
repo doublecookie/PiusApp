@@ -147,7 +147,22 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
     String berechneKurseVertretung(final String data, final String kurse){
         try {
             JSONObject vertretungJson = new JSONObject(data);
-            JSONObject kurseJson = new JSONObject(kurse);
+            JSONArray kurseJson = new JSONArray(kurse);
+
+            JSONArray tage = vertretungJson.getJSONArray("tage");
+
+            for(int i = tage.length(); i > 0; i--){
+
+                JSONObject tag = tage.getJSONObject(i);
+
+                JSONArray klassen = tag.getJSONArray("klassen");
+
+                for (int j = klassen.length(); j > 0 ; j--) {
+
+                    JSONObject klasse = klassen.getJSONObject(j);
+
+                }
+            }
 
             return vertretungJson.toString();
         }catch(Exception e){
