@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -409,16 +410,23 @@ public class KurseFragment extends Fragment {
                             break;
                     }
 
-                    kurse.put(neuerKurs);
-                    writeToFile(kurse.toString(), getString(R.string.kurse_filename));
-                    erstelleKurseList(kurse.toString());
-                    
+                    boolean dopplung = false;
+                    for (int j = 0; j < kurse.length(); j++) {
+                        if(kurse.getJSONObject(j).equals(neuerKurs)) dopplung = true;
+                    }
+                    if(dopplung){
+                        Toast.makeText(getContext(), getString(R.string.duplicate_kurs), Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        kurse.put(neuerKurs);
+                        writeToFile(kurse.toString(), getString(R.string.kurse_filename));
+                        erstelleKurseList(kurse.toString());
+                        dialogInterface.dismiss();
+                    }
                 }
                 catch(Exception e){
                     Log.e("addKurseSpeichern", e.toString());
                 }
-
-                dialogInterface.dismiss();
             }
         });
         builder.setNegativeButton(getString(R.string.cancel_kurs), new DialogInterface.OnClickListener() {
@@ -538,19 +546,21 @@ public class KurseFragment extends Fragment {
 
                 kurseList.animate().alpha(1f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
 
-                for (int i = 0; i < kurseList.getChildCount(); i++) {
-                    View child = kurseList.getChildAt(i);
-                    child.setAlpha(0f);
-                    child.setTranslationY(100f);
-                }
-                for (int i = 0; i < kurseList.getChildCount(); i++) {
-                    final View child = kurseList.getChildAt(i);
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            child.animate().alpha(1f).translationY(0f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
-                        }
-                    }, i * 100);
+                if(kurseList.getChildCount() > 1) {
+                    for (int i = 0; i < kurseList.getChildCount(); i++) {
+                        View child = kurseList.getChildAt(i);
+                        child.setAlpha(0f);
+                        child.setTranslationY(100f);
+                    }
+                    for (int i = 0; i < kurseList.getChildCount(); i++) {
+                        final View child = kurseList.getChildAt(i);
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                child.animate().alpha(1f).translationY(0f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+                            }
+                        }, i * 100);
+                    }
                 }
             }
         }, 300);

@@ -160,6 +160,19 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
                 for (int j = klassen.length(); j > 0 ; j--) {
 
                     JSONObject klasse = klassen.getJSONObject(j);
+                    boolean removedKlasse = false;
+
+                    for (int k = 0; k < kurseJson.length(); k++) {
+                        JSONObject kursJson = kurseJson.getJSONObject(k);
+
+                        String kursKlasse = "";
+                        if(kursJson.getBoolean("hasKlasse")) kursKlasse = kursJson.getString("stufe")+kursJson.getString("klasse");
+                        else if(!kursJson.getBoolean("hasKurs")) kursKlasse = kursJson.getString("stufe");
+
+                        if(kursKlasse.length()>0 && kursKlasse.equals(klasse.getString("klasse"))){
+                            //TODO remove;
+                        }
+                    }
 
                 }
             }

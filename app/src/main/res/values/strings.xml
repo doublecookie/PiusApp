@@ -57,6 +57,7 @@
     <string name="dialog_explanation_kurs">Du kannst entweder die ganze Stufe oder all deine eigenen Kurse auswählen</string>
 
     <string name="add_kurs">Kurs hinzufügen</string>
+    <string name="duplicate_kurs">Diesen Kurs hast du bereits hinzugefügt</string>
     <string name="cancel_kurs">Abbrechen</string>
 
     <string-array name="stufen">
