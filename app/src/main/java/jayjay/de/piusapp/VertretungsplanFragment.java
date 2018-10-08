@@ -321,7 +321,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
                                         vertretungsTextView.setText(vertretungsText);
                                     }
 
-                                    vertretungsTextView.setPadding(10, 0, 0, 0);
+                                    vertretungsTextView.setPadding(10, 0, 10, 0);
                                     if(l == 0){
                                         vertretungsTextView.setSingleLine(true);
                                     }else if(l == vertretungsTexte.length-1){
@@ -404,6 +404,8 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
                                     constraintSet.constrainWidth(evaTextView.getId(),ConstraintSet.MATCH_CONSTRAINT);
 
                                     constraintSet.applyTo(constraintEva);
+
+                                    rowEva.addView(constraintEva);
 
                                     vertretungsTable.addView(rowEva);
 

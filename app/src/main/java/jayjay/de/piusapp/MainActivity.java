@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //TODO: DefaultExceptionHandler sollte funktionieren tut es aber nicht und ich versteeeeehe nicht warum :(
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this)); //ALLE Fehler werden weitergeleitet und app crashed nicht
@@ -78,8 +81,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //bei start wird das DashboardFragment geladen
-        fragmentManager.beginTransaction().replace(R.id.content, new DashboardFragment()).commit();
+//        bei start wird das DashboardFragment geladen
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        generalInterface = (refreshInterface) dashboardFragment;
+        fragmentManager.beginTransaction().replace(R.id.content, dashboardFragment).commit();
 
         //Liste im Drawer Layout
         NavigationView navigationView = findViewById(R.id.nav_view);

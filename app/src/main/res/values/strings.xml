@@ -54,9 +54,11 @@
     <string name="dialog_edit_title_klasse">Bearbeite deine Stufe und Klasse:</string>
     <string name="dialog_edit_title_kurs">Bearbeite deine Stufe oder Kurs:</string>
 
-    <string name="dialog_explanation_kurs">Du kannst entweder die ganze Stufe oder all deine eigenen Kurse auswählen</string>
+    <string name="dialog_explanation_kurs">Du kannst entweder die ganze Stufe oder einzelne Kurse auswählen</string>
 
     <string name="add_kurs">Kurs hinzufügen</string>
+    <string name="add_klasse">Klasse hinzufügen</string>
+    <string name="add_stufe">Stufe hinzufügen</string>
     <string name="duplicate_kurs">Diesen Kurs hast du bereits hinzugefügt</string>
     <string name="cancel_kurs">Abbrechen</string>
 

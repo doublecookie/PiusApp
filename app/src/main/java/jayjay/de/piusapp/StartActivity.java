@@ -137,6 +137,8 @@ public class StartActivity extends AppCompatActivity {
         loginLinear.setVisibility(View.GONE);
         loading.setVisibility(View.INVISIBLE);
 
+        setPage(1);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
     }
@@ -267,6 +269,8 @@ public class StartActivity extends AppCompatActivity {
                     }
                 }, 1000);
 
+                setPage(2);
+
                 state++;
                 break;
 
@@ -279,6 +283,9 @@ public class StartActivity extends AppCompatActivity {
 
 
             case 2:
+
+                setPage(3);
+
                 if(false /*keine Kurse*/){
                     //TODO: Warnmeldung
                 }else{
@@ -293,7 +300,7 @@ public class StartActivity extends AppCompatActivity {
 
     private void onSoftKeyboardChanged(boolean open){
         if(open){
-            appLogo.animate().alpha(0f).translationY(-256f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+            appLogo.animate().alpha(0f).translationY(-256f).setDuration(200).setInterpolator(new AccelerateDecelerateInterpolator());
             loginLinear.animate().translationY(-768f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
             loading.animate().translationY(-640f).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
         }else{
@@ -321,6 +328,41 @@ public class StartActivity extends AppCompatActivity {
             loading.setVisibility(View.VISIBLE);
             testingInProgress = true;
         }
+    }
+
+    void setPage(int page){
+        ImageView dot1 = findViewById(R.id.dot1);
+        ImageView dot2 = findViewById(R.id.dot2);
+        ImageView dot3 = findViewById(R.id.dot3);
+        switch (page){
+            case 1:
+                setSelectedDot(dot1);
+                setUnselectedDot(dot2);
+                setUnselectedDot(dot3);
+                break;
+            case 2:
+                setSelectedDot(dot2);
+                setUnselectedDot(dot1);
+                setUnselectedDot(dot3);
+                break;
+            case 3:
+                setSelectedDot(dot3);
+                setUnselectedDot(dot1);
+                setUnselectedDot(dot2);
+                break;
+        }
+    }
+    void setUnselectedDot(ImageView dot){
+        dot.animate().scaleX(1.0f).scaleY(1.0f).alpha(0.3f).setDuration(300).setInterpolator(new AccelerateDecelerateInterpolator());
+//        dot.setScaleX(1.0f);
+//        dot.setScaleY(1.0f);
+//        dot.setColorFilter(getResources().getColor(R.color.gray));
+    }
+    void setSelectedDot(ImageView dot){
+        dot.animate().scaleX(1.5f).scaleY(1.5f).alpha(0.5f).setDuration(300).setInterpolator(new AccelerateDecelerateInterpolator());
+//        dot.setScaleX(1.5f);
+//        dot.setScaleY(1.5f);
+//        dot.setColorFilter(getResources().getColor(R.color.dot_selected));
     }
 
     private void starteBackgroundTasks(){

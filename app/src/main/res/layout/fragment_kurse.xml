@@ -8,7 +8,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <TextView
             android:id="@+id/kurse_header"
@@ -31,7 +32,8 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/layout_rounded_corners"
             android:paddingBottom="4dp"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:paddingTop="4dp"
             android:text="@string/keine_kurse"
             android:textColor="@android:color/white"
@@ -40,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/kurse_header" />
 
         <Button
-            android:id="@+id/add_kurse"
+            android:id="@+id/add_kurse_scan"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,9 +50,41 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:text="@string/add_kurse"
+            android:drawableLeft="@drawable/camera"
+            android:drawablePadding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/keine_kurse_info" />
+
+        <Button
+            android:id="@+id/add_kurse_pdf"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/add_kurse"
+            android:drawableLeft="@drawable/file_pdf"
+            android:drawablePadding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_kurse_scan" />
+
+        <Button
+            android:id="@+id/add_kurse_manually"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/add_kurse"
+            android:drawableLeft="@drawable/pencil_box"
+            android:drawablePadding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_kurse_pdf" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -63,13 +97,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_kurse">
+            app:layout_constraintTop_toBottomOf="@+id/add_kurse_manually">
 
             <LinearLayout
                 android:id="@+id/kurse_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:animateLayoutChanges="true"/>
 
         </ScrollView>
 

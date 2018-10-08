@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#1e6f93</color>
     <color name="colorAccent">#84bde2</color>
     <item type="color" name="gray">#aaa</item>
+    <item type="color" name="dot_selected">#808080</item>
 </resources>

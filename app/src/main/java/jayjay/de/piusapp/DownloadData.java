@@ -245,7 +245,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                     Element trElement = klassenDaten.parent().nextElementSibling().nextElementSibling();
                     while (true) {
                         try {
-                            if (trElement.child(0).hasClass("vertretung")||trElement.child(0).hasClass("vertretung neu")) {
+                            if (trElement.child(0).hasClass("vertretung")|| trElement.child(0).hasClass("vertretung neu")) {
 
                                 for (Element tdVertretung : trElement.children()) {
                                     if (tdVertretung.hasClass("vertretung neu")) {
@@ -263,23 +263,18 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                                 vertretung.put("lehrerPlan", trElement.child(5).text());
                                 vertretung.put("bemerkung", trElement.child(6).text());
 
+                                trElement = trElement.nextElementSibling();
+
                                 JSONArray evas = new JSONArray();
 
-                                try{
-                                    while(trElement.child(1).hasClass("eva")) {
-                                        evas.put(trElement.child(2).text());
-                                        trElement = trElement.nextElementSibling();
-                                    }
-                                }
-                                catch(Exception e){
-                                    break;
+                                while(trElement.children().size() >= 1 && trElement.child(1).hasClass("eva")) {
+                                    evas.put(trElement.child(2).text());
+                                    trElement = trElement.nextElementSibling();
                                 }
 
                                 vertretung.put("eva", evas);
 
                                 vertretungen.put(vertretung);
-
-                                trElement = trElement.nextElementSibling();
                             }
                             else {
                                 break;
