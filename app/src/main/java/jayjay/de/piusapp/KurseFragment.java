@@ -10,10 +10,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.Px;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +21,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -43,8 +39,11 @@ import java.util.Arrays;
  * TODO Kurse
  * TODO einfache Auswahl
  * TODO ggf. Lehrer
+ * TODO ggf Dialog in eigene Klasse packen?
+ * TODO rückgabe system von kurs(en)
+ * TODO dialog: ändern von title und positive button
  */
-public class KurseFragment extends Fragment {
+public class KurseFragment extends Fragment implements KursSelectionCompleteListener{
 
 
     public KurseFragment() {
@@ -53,7 +52,7 @@ public class KurseFragment extends Fragment {
 
     TextView kurseHeader;
     TextView keineKurseInfo;
-    Button addKurse;
+    Button addKurse; //TODO umbennen
     LinearLayout kurseList;
 
     boolean stufePickerOngoingScroll;
@@ -138,6 +137,11 @@ public class KurseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onComplete(JSONArray neueKurse) {
+        //TODO add neue Kurse
+    }
+
     void openEmptyAddDialog(){
         openAddDialog(null);
     }
@@ -149,7 +153,7 @@ public class KurseFragment extends Fragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
 
-        View dialogView = inflater.inflate(R.layout.dialog, null, false);
+        View dialogView = inflater.inflate(R.layout.kurspicker_dialog, null, false);
         final NumberPicker stufePicker = dialogView.findViewById(R.id.stufe_picker);
         final NumberPicker klassePicker = dialogView.findViewById(R.id.klasse_picker);
         final NumberPicker kursTypePicker = dialogView.findViewById(R.id.kurs_type_picker);
@@ -641,5 +645,4 @@ public class KurseFragment extends Fragment {
         }
         return "error";
     }
-
 }

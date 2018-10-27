@@ -43,7 +43,7 @@ import java.io.InputStreamReader;
 
 /*
 * TODO next button: ich möchte ohne kurse fortfahren
-* TODO Kurse + automatisches Laden
+* TODO Kurse + automatisches Laden (aus alter App + sommerferien kurse hochstellen(integrierter Tagesliste der Somemrferienende?))
 * TODO Stundenplan + pdf laden
 * TODO Einstellungen + automatisches Laden
  */

@@ -37,8 +37,8 @@ import java.io.InputStreamReader;
 
 
 /**
- * TODO Kurse Algorithmus
  * TODO du hast noch keine Kurse link zu KurseFragment und automatisches öffnen des add windows
+ * TODO keine deiner Kurse ist betroffen
  */
 public class DashboardFragment extends Fragment implements MainActivity.refreshInterface{
 
@@ -111,7 +111,7 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
 
             if(data.success) {
                 fehlerView.setVisibility(View.GONE);
-                erstelleLayout(data.downloadData);
+                load(data.downloadData);
             }else{
                 fehlerView.setText(data.errorMessage);
                 fehlerView.setVisibility(View.VISIBLE);
@@ -122,7 +122,11 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
     };
 
     void load(){
-        erstelleLayout(readFromFile(getString(R.string.vertretungs_filename)));
+        load(readFromFile(getString(R.string.vertretungs_filename)));
+    }
+
+    void load(String data){
+        erstelleLayout(berechneKurseVertretung(data, readFromFile(getString(R.string.kurse_filename))));
     }
 
     @Override
@@ -144,40 +148,118 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
         }, 1000);
     }
 
-    String berechneKurseVertretung(final String data, final String kurse){
+    String berechneKurseVertretung(final String data, final String kurseData){
         try {
             JSONObject vertretungJson = new JSONObject(data);
-            JSONArray kurseJson = new JSONArray(kurse);
-
+            JSONArray kurseJson = new JSONArray(kurseData);
             JSONArray tage = vertretungJson.getJSONArray("tage");
 
-            for(int i = tage.length(); i > 0; i--){
+            JSONObject neuerVertretungsJson = new JSONObject();
+            JSONArray neueTage = new JSONArray();
+
+            for(int i = 0; i < tage.length(); i++){
 
                 JSONObject tag = tage.getJSONObject(i);
 
                 JSONArray klassen = tag.getJSONArray("klassen");
 
-                for (int j = klassen.length(); j > 0 ; j--) {
+                JSONObject neuerTag = new JSONObject();
+                JSONArray neueKlassen = new JSONArray();
+
+                for (int j = 0; j < klassen.length() ; j++) {
 
                     JSONObject klasse = klassen.getJSONObject(j);
-                    boolean removedKlasse = false;
 
+                    JSONObject neueKlasse = new JSONObject();
+
+                    boolean equalsKlasse = false;
+                    boolean equalsStufe = false;
                     for (int k = 0; k < kurseJson.length(); k++) {
                         JSONObject kursJson = kurseJson.getJSONObject(k);
 
-                        String kursKlasse = "";
-                        if(kursJson.getBoolean("hasKlasse")) kursKlasse = kursJson.getString("stufe")+kursJson.getString("klasse");
-                        else if(!kursJson.getBoolean("hasKurs")) kursKlasse = kursJson.getString("stufe");
+                        if(kursJson.getBoolean("hasKlasse")) {
+                            if ((kursJson.getString("stufe") + kursJson.getString("klasse")).equals(klasse.getString("klasse"))) equalsKlasse = true;
+                        }
+                        else{
+                            if(!kursJson.getBoolean("hasKurs")) {
+                                if (kursJson.getString("stufe").equals(klasse.getString("klasse"))) equalsKlasse = true;
+                            }
+                            else if(kursJson.getString("stufe").equals(klasse.getString("klasse"))) equalsStufe = true;
+                        }
+                        System.out.println("-----------------------------------------");
+                        System.out.println("kursJson.getString(\"stufe\") = " + kursJson.getString("stufe"));
+                        System.out.println("klasse.getString(\"klasse\") = " + klasse.getString("klasse"));
+                        System.out.println("kursJson.getBoolean(\"hasKlasse\") = " + kursJson.getBoolean("hasKlasse"));
+                        System.out.println("kursJson.getBoolean(\"hasKurs\") = " + kursJson.getBoolean("hasKurs"));
+                        System.out.println("equalsStufe = " + equalsStufe);
+                        System.out.println("equalsKlasse = " + equalsKlasse);
+                    }
 
-                        if(kursKlasse.length()>0 && kursKlasse.equals(klasse.getString("klasse"))){
-                            //TODO remove;
+
+                    boolean equalsMinOneVertretung = false;
+
+                    if(equalsKlasse){
+                        neueKlasse = klasse;
+                    }
+                    else if (equalsStufe){
+                        try {
+                            JSONArray vertretungen = klasse.getJSONArray("vertretungen");
+
+                            JSONArray neueVertretungen = new JSONArray();
+
+                            System.out.println("--------------------------");
+
+                            for (int k = 0; k < vertretungen.length(); k++) {
+                                JSONObject vertretung = vertretungen.getJSONObject(k);
+
+                                boolean equalsVertretung = false;
+                                for (int l = 0; l < kurseJson.length(); l++) {
+                                    JSONObject kursJson = kurseJson.getJSONObject(k);
+
+                                    System.out.println("----");
+                                    System.out.println("vertretung.getString(\"kurs\") = " + vertretung.getString("kurs"));
+                                    System.out.println("kursJson.getString(\"klasse\") + \" \" + kursJson.getString(\"kursType\") + kursJson.getString(\"kursZahl\") = " + kursJson.getString("klasse") + " " + kursJson.getString("kursType") + kursJson.getString("kursZahl"));
+
+                                    if (vertretung.getString("kurs").equals(kursJson.getString("klasse") + " " + kursJson.getString("kursType") + kursJson.getString("kursZahl"))) {
+                                        equalsMinOneVertretung = true;
+                                        equalsVertretung = true;
+                                    }
+                                }
+
+                                if (equalsVertretung) {
+                                    neueVertretungen.put(vertretung);
+                                }
+                            }
+
+                            if (equalsMinOneVertretung) {
+                                neueKlasse.put("klasse", klasse.getString("klasse"));
+                                neueKlasse.put("vertretungen", neueVertretungen);
+                            }
+                        }
+                        catch (Exception e){
+                            //TODO Fehler bei Q2 D G1 suchen
+                            e.printStackTrace();
                         }
                     }
 
+                    if(equalsKlasse||equalsMinOneVertretung){
+                        neueKlassen.put(neueKlasse);
+                    }
+
                 }
+
+                neuerTag.put("tag", tag.getString("tag"));
+                neuerTag.put("betroffen", tag.getString("betroffen"));
+                neuerTag.put("letzteAktualisierung", tag.getString("letzteAktualisierung"));
+                neuerTag.put("klassen", neueKlassen);
+
+                neueTage.put(neuerTag);
             }
 
-            return vertretungJson.toString();
+            neuerVertretungsJson.put("ticker", vertretungJson.getString("ticker"));
+            neuerVertretungsJson.put("tage", neueTage);
+
+            return neuerVertretungsJson.toString();
         }catch(Exception e){
             Log.e("berechneKurseVertretung", e.toString());
             return "error";

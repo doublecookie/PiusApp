@@ -109,13 +109,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId(); //item id wie in menu/activity_main_drawer.xml
 
-        //markiere aktuelles Item
-        item.setCheckable(true);
-        item.setChecked(true);
         //Entmarkiere altes Item
         if (mPreviousMenuItem != null) {
             mPreviousMenuItem.setChecked(false);
         }
+
+        //markiere aktuelles Item
+        item.setCheckable(true);
+        item.setChecked(true);
+
         mPreviousMenuItem = item; // setze neues Item in Variable, da es das nächste Mal das alte sein wird
 
         //switche über id --> je nach Id wird bestimmtes Fragment in das Frame Layout @+id/content (content_main.xml) geladen

@@ -27,8 +27,8 @@
         <activity
             android:name=".StartActivity"
             android:label="@string/title_activity_start"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <service
@@ -41,6 +41,7 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".KurseSelectionPdfActivity"></activity>
     </application>
 
 </manifest>

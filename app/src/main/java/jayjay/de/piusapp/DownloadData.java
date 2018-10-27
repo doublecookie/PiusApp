@@ -1,31 +1,32 @@
 package jayjay.de.piusapp;
 
-        import android.content.Context;
-        import android.content.SharedPreferences;
-        import android.os.AsyncTask;
-        import android.os.Handler;
-        import android.os.Looper;
-        import android.preference.PreferenceManager;
-        import android.util.Log;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
-        import org.json.JSONArray;
-        import org.json.JSONObject;
-        import org.jsoup.Jsoup;
-        import org.jsoup.nodes.Document;
-        import org.jsoup.nodes.Element;
-        import org.jsoup.nodes.TextNode;
-        import org.jsoup.select.Elements;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
-        import java.io.BufferedReader;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.InputStreamReader;
-        import java.io.OutputStreamWriter;
-        import java.net.Authenticator;
-        import java.net.HttpURLConnection;
-        import java.net.PasswordAuthentication;
-        import java.net.URL;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Authenticator;
+import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
+import java.net.URL;
 
+//TODO: check for offline
 //AsyncTask zum herunterladen von Daten
 public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
@@ -245,7 +246,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                     Element trElement = klassenDaten.parent().nextElementSibling().nextElementSibling();
                     while (true) {
                         try {
-                            if (trElement.child(0).hasClass("vertretung")|| trElement.child(0).hasClass("vertretung neu")) {
+                            if (trElement != null && trElement.children().size() >= 1 && trElement.child(0).hasClass("vertretung")|| trElement.child(0).hasClass("vertretung neu")) {
 
                                 for (Element tdVertretung : trElement.children()) {
                                     if (tdVertretung.hasClass("vertretung neu")) {
@@ -267,7 +268,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
 
                                 JSONArray evas = new JSONArray();
 
-                                while(trElement.children().size() >= 1 && trElement.child(1).hasClass("eva")) {
+                                while(trElement != null && trElement.children().size() >= 2 && trElement.child(1).hasClass("eva")) {
                                     evas.put(trElement.child(2).text());
                                     trElement = trElement.nextElementSibling();
                                 }

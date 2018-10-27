@@ -156,6 +156,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
 
                     String[] klassenBeschriftung = getActivity().getResources().getStringArray(R.array.vertretungsplan_klassen_beschriftung);
 
+                    //TODO: roter Ticker Text
                     String tickerText = vertretungsplan.getString("ticker");
                     if(!tickerText.equals("") && tickerText != null) {
                         tickerHeader.setVisibility(View.VISIBLE);
@@ -321,7 +322,7 @@ public class VertretungsplanFragment extends Fragment implements MainActivity.re
                                         vertretungsTextView.setText(vertretungsText);
                                     }
 
-                                    vertretungsTextView.setPadding(10, 0, 10, 0);
+                                    vertretungsTextView.setPadding(10, 0, 15, 0);
                                     if(l == 0){
                                         vertretungsTextView.setSingleLine(true);
                                     }else if(l == vertretungsTexte.length-1){
