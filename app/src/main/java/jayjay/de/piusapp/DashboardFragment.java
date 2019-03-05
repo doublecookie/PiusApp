@@ -252,6 +252,9 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
                 neuerTag.put("betroffen", tag.getString("betroffen"));
                 neuerTag.put("letzteAktualisierung", tag.getString("letzteAktualisierung"));
                 neuerTag.put("klassen", neueKlassen);
+                if(neueKlassen.length() == 0){
+                    neuerTag.put("empty",true);
+                }
 
                 neueTage.put(neuerTag);
             }
@@ -282,6 +285,7 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
 
                     String[] klassenBeschriftung = getActivity().getResources().getStringArray(R.array.vertretungsplan_klassen_beschriftung);
 
+                    //TODO: roter Ticker Text
                     String tickerText = vertretungsplan.getString("ticker");
                     if(!tickerText.equals("") && tickerText != null) {
                         tickerHeader.setVisibility(View.VISIBLE);
@@ -298,6 +302,7 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
                         String tagText = tag.getString("tag");
                         String letzteAktualisierung = tag.getString("letzteAktualisierung");
                         String betroffen = tag.getString("betroffen");
+                        boolean empty = (tag.has("empty") && tag.getBoolean("empty"));
 
                         TableRow tagTextRow = new TableRow(vertretungsTable.getContext());
                         TableLayout.LayoutParams tagTextRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -351,190 +356,215 @@ public class DashboardFragment extends Fragment implements MainActivity.refreshI
                         vertretungsTable.addView(letzteAktualisierungRow);
                         vertretungsTable.addView(betroffenRow);
 
-                        JSONArray klassen = tag.getJSONArray("klassen");
+                        if(empty){
+                            TableRow nichtBetroffenRow = new TableRow(vertretungsTable.getContext());
+                            TableLayout.LayoutParams nichtBetroffenRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            nichtBetroffenRowParams.setMargins(0,32,0,0);
+                            nichtBetroffenRow.setLayoutParams(nichtBetroffenRowParams);
 
-                        for (int j = 0; j < klassen.length(); j++) {
+                            TextView nichtBetroffenTextView = new TextView(nichtBetroffenRow.getContext());
+                            TableRow.LayoutParams nichtBetroffenTextViewParams= new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+                            nichtBetroffenTextViewParams.span = 7;
+                            nichtBetroffenTextView.setText(getString(R.string.nicht_betroffen));
+                            nichtBetroffenTextView.setTextColor(piusColor);
+                            nichtBetroffenTextView.setTextSize(15f);
+                            nichtBetroffenTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+                            nichtBetroffenTextView.setLayoutParams(nichtBetroffenTextViewParams);
 
-                            JSONObject klasse = klassen.getJSONObject(j);
+                            nichtBetroffenRow.addView(nichtBetroffenTextView);
 
-                            String klassenText = klasse.getString("klasse");
+                            vertretungsTable.addView(nichtBetroffenRow);
+                        }
+                        else {
 
-                            TableRow klassenRow = new TableRow(vertretungsTable.getContext());
-                            TableLayout.LayoutParams klassenRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            klassenRowParams.setMargins(0,64,0,3);
-                            klassenRow.setBackgroundColor(piusDarkColor);
-                            klassenRow.setLayoutParams(klassenRowParams);
+                            JSONArray klassen = tag.getJSONArray("klassen");
 
-                            TextView klassenTextView = new TextView(klassenRow.getContext());
-                            klassenTextView.setText(klassenText);
-                            klassenTextView.setTextColor(weiss);
-                            klassenTextView.setGravity(Gravity.LEFT);
-                            klassenTextView.setPadding(16,10,0,10);
-                            klassenTextView.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            for (int j = 0; j < klassen.length(); j++) {
 
-                            klassenRow.addView(klassenTextView);
+                                JSONObject klasse = klassen.getJSONObject(j);
 
-                            TableRow klassenBeschriftungRow = new TableRow(vertretungsTable.getContext());
-                            TableLayout.LayoutParams klassenBeschriftungRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            klassenBeschriftungRow.setBackgroundColor(piusDarkColor);
-                            klassenBeschriftungRow.setLayoutParams(klassenBeschriftungRowParams);
+                                String klassenText = klasse.getString("klasse");
 
-                            for (int k = 0; k < klassenBeschriftung.length; k++) {
+                                TableRow klassenRow = new TableRow(vertretungsTable.getContext());
+                                TableLayout.LayoutParams klassenRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                klassenRowParams.setMargins(0, 64, 0, 3);
+                                klassenRow.setBackgroundColor(piusDarkColor);
+                                klassenRow.setLayoutParams(klassenRowParams);
 
-                                String beschriftung = klassenBeschriftung[k];
+                                TextView klassenTextView = new TextView(klassenRow.getContext());
+                                klassenTextView.setText(klassenText);
+                                klassenTextView.setTextColor(weiss);
+                                klassenTextView.setGravity(Gravity.LEFT);
+                                klassenTextView.setPadding(16, 10, 0, 10);
+                                klassenTextView.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                                TextView beschriftungsTextView = new TextView(klassenBeschriftungRow.getContext());
-                                beschriftungsTextView.setText(beschriftung);
-                                beschriftungsTextView.setTextColor(weiss);
-                                beschriftungsTextView.setTextSize(10f);
-                                beschriftungsTextView.setSingleLine(true);
-                                beschriftungsTextView.setMinEms(beschriftung.length());
-                                beschriftungsTextView.setPadding(8,4,8,4);
-                                beschriftungsTextView.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                                klassenRow.addView(klassenTextView);
 
-                                klassenBeschriftungRow.addView(beschriftungsTextView);
+                                TableRow klassenBeschriftungRow = new TableRow(vertretungsTable.getContext());
+                                TableLayout.LayoutParams klassenBeschriftungRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                klassenBeschriftungRow.setBackgroundColor(piusDarkColor);
+                                klassenBeschriftungRow.setLayoutParams(klassenBeschriftungRowParams);
 
-                                if(k != klassenBeschriftung.length-1) {
-                                    layoutInflater.inflate(R.layout.divider, klassenBeschriftungRow);
-                                }
+                                for (int k = 0; k < klassenBeschriftung.length; k++) {
 
-                            }
+                                    String beschriftung = klassenBeschriftung[k];
 
-                            vertretungsTable.addView(klassenRow);
-                            vertretungsTable.addView(klassenBeschriftungRow);
+                                    TextView beschriftungsTextView = new TextView(klassenBeschriftungRow.getContext());
+                                    beschriftungsTextView.setText(beschriftung);
+                                    beschriftungsTextView.setTextColor(weiss);
+                                    beschriftungsTextView.setTextSize(10f);
+                                    beschriftungsTextView.setSingleLine(true);
+                                    beschriftungsTextView.setMinEms(beschriftung.length());
+                                    beschriftungsTextView.setPadding(8, 4, 8, 4);
+                                    beschriftungsTextView.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
-                            JSONArray vertretungen = klasse.getJSONArray("vertretungen");
+                                    klassenBeschriftungRow.addView(beschriftungsTextView);
 
-                            for (int k = 0; k < vertretungen.length(); k++) {
-
-                                JSONObject vertretung = vertretungen.getJSONObject(k);
-
-                                String[] vertretungsTexte = new String[7];
-
-                                vertretungsTexte[0] = vertretung.getString("stunden");
-                                vertretungsTexte[1] = vertretung.getString("art");
-                                vertretungsTexte[2] = vertretung.getString("kurs");
-                                vertretungsTexte[3] = vertretung.getString("raum");
-                                vertretungsTexte[4] = vertretung.getString("lehrerAktuell");
-                                vertretungsTexte[5] = vertretung.getString("lehrerPlan");
-                                vertretungsTexte[6] = vertretung.getString("bemerkung");
-
-                                TableRow vertretungsRow = new TableRow(vertretungsTable.getContext());
-                                TableLayout.LayoutParams vertretungsRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                vertretungsRowParams.setMargins(0,3,0,0);
-                                vertretungsRow.setBackgroundColor(piusColor);
-                                vertretungsRow.setLayoutParams(vertretungsRowParams);
-
-                                for (int l = 0; l < vertretungsTexte.length; l++) {
-                                    String vertretungsText = vertretungsTexte[l];
-
-                                    TextView vertretungsTextView = new TextView(vertretungsRow.getContext());
-
-                                    if (vertretungsText.length()>1 && vertretungsText.substring(0, 1).equals("%")) {
-                                        vertretungsTextView.setBackgroundColor(rot);
-                                        vertretungsText = vertretungsText.substring(1);
+                                    if (k != klassenBeschriftung.length - 1) {
+                                        layoutInflater.inflate(R.layout.divider, klassenBeschriftungRow);
                                     }
-                                    if(vertretungsText.equals("Vertretung")) vertretungsText = "Vtr.";
-                                    else if(vertretungsText.equals("Mitbetreuung")) vertretungsText = "Mitbetr.";
-                                    if (vertretungsText.contains("^")) {
-                                        int start = vertretungsText.indexOf("^");
-                                        int end = vertretungsText.indexOf("^", start + 1);
-                                        vertretungsText = vertretungsText.replace("^", "");
-                                        SpannableStringBuilder spanString = new SpannableStringBuilder(vertretungsText);
-                                        spanString.setSpan(new StrikethroughSpan(), start, end - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                                        vertretungsTextView.setText(spanString);
-                                    } else {
-                                        vertretungsTextView.setText(vertretungsText);
-                                    }
-
-                                    vertretungsTextView.setPadding(10, 0, 0, 0);
-                                    if(l == 0){
-                                        vertretungsTextView.setSingleLine(true);
-                                    }else if(l == vertretungsTexte.length-1){
-                                        vertretungsTextView.setMaxWidth(vertretungsTable.getWidth() / 4);
-                                    }
-
-                                    vertretungsTextView.setTextColor(weiss);
-                                    vertretungsTextView.setTextSize(10f);
-                                    vertretungsTextView.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
-
-                                    vertretungsRow.addView(vertretungsTextView);
-
-                                    if(l != vertretungsTexte.length-1) {
-                                        View divider = new View(vertretungsRow.getContext());
-                                        divider.setLayoutParams(new TableRow.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
-                                        divider.setBackgroundColor(weiss);
-
-                                        vertretungsRow.addView(divider);
-                                    }
-                                }
-
-                                vertretungsTable.addView(vertretungsRow);
-
-                                JSONArray evas = vertretung.getJSONArray("eva");
-
-                                for (int l = 0; l < evas.length(); l++) {
-
-                                    //TODO maybe optimize eva
-
-                                    String evaText = evas.getString(l);
-
-                                    float density = vertretungsTable.getContext().getResources().getDisplayMetrics().density;
-
-                                    TableLayout.LayoutParams rowEvaParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                                    TableRow rowEva = new TableRow(vertretungsTable.getContext());
-                                    rowEva.setBackgroundColor(evaGelb);
-                                    rowEva.setLayoutParams(rowEvaParams);
-
-                                    TableRow.LayoutParams evaLinearParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT,1f);
-                                    evaLinearParams.span= 13;
-                                    ConstraintLayout constraintEva = new ConstraintLayout(rowEva.getContext());
-                                    constraintEva.setPadding(15,15,15,15);
-                                    constraintEva.setId(View.generateViewId());
-                                    //linearEva.setBackgroundColor(Color.rgb(255,0,0));
-                                    constraintEva.setLayoutParams(evaLinearParams);
-                                    ConstraintSet constraintSet = new ConstraintSet();
-                                    constraintSet.clone(constraintEva);
-
-                                    ConstraintLayout.LayoutParams evaBeschrParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-                                    TextView evaBeschrTextView = new TextView(constraintEva.getContext());
-                                    evaBeschrTextView.setTextColor(piusDarkColor);
-                                    evaBeschrTextView.setTextSize(10);
-                                    evaBeschrTextView.setSingleLine(true);
-                                    evaBeschrTextView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-                                    evaBeschrTextView.setText(getString(R.string.eva));
-                                    evaBeschrTextView.setId(TextView.generateViewId());
-                                    constraintEva.addView(evaBeschrTextView,0,evaBeschrParams);
-
-                                    constraintSet.connect(evaBeschrTextView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT);
-                                    constraintSet.connect(evaBeschrTextView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
-                                    constraintSet.constrainHeight(evaBeschrTextView.getId(),ConstraintSet.WRAP_CONTENT);
-                                    constraintSet.constrainWidth(evaBeschrTextView.getId(),ConstraintSet.WRAP_CONTENT);
-                                    constraintSet.applyTo(constraintEva);
-
-                                    ConstraintLayout.LayoutParams evaParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-                                    evaParams.setMargins(0,0,0,0);
-                                    final TextView evaTextView = new TextView(constraintEva.getContext());
-                                    evaTextView.setPadding(20,0,(int)(40*density),0);
-                                    evaTextView.setTextColor(piusDarkColor);
-                                    evaTextView.setTextSize(10);
-                                    evaTextView.setId(TextView.generateViewId());
-                                    evaTextView.setText(evaText);
-                                    constraintEva.addView(evaTextView,1,evaParams);
-
-                                    constraintSet.connect(evaTextView.getId(),ConstraintSet.LEFT,evaBeschrTextView.getId(),ConstraintSet.RIGHT);
-                                    constraintSet.connect(evaTextView.getId(),ConstraintSet.RIGHT,vertretungsTable.getId(),ConstraintSet.RIGHT);
-                                    constraintSet.connect(evaTextView.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP);
-                                    constraintSet.connect(evaTextView.getId(),ConstraintSet.BOTTOM,ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM);
-                                    constraintSet.constrainHeight(evaTextView.getId(),ConstraintSet.WRAP_CONTENT);
-                                    constraintSet.constrainWidth(evaTextView.getId(),ConstraintSet.MATCH_CONSTRAINT);
-
-                                    constraintSet.applyTo(constraintEva);
-
-                                    vertretungsTable.addView(rowEva);
 
                                 }
 
+                                vertretungsTable.addView(klassenRow);
+                                vertretungsTable.addView(klassenBeschriftungRow);
+
+                                JSONArray vertretungen = klasse.getJSONArray("vertretungen");
+
+                                for (int k = 0; k < vertretungen.length(); k++) {
+
+                                    JSONObject vertretung = vertretungen.getJSONObject(k);
+
+                                    String[] vertretungsTexte = new String[6];
+
+                                    vertretungsTexte[0] = vertretung.getString("stunden");
+                                    vertretungsTexte[1] = vertretung.getString("art");
+                                    vertretungsTexte[2] = vertretung.getString("kurs");
+                                    vertretungsTexte[3] = vertretung.getString("raum");
+                                    vertretungsTexte[4] = vertretung.getString("lehrerAktuell");
+                                    vertretungsTexte[5] = vertretung.getString("bemerkung");
+
+                                    TableRow vertretungsRow = new TableRow(vertretungsTable.getContext());
+                                    TableLayout.LayoutParams vertretungsRowParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    vertretungsRowParams.setMargins(0, 3, 0, 0);
+                                    vertretungsRow.setBackgroundColor(piusColor);
+                                    vertretungsRow.setLayoutParams(vertretungsRowParams);
+
+                                    for (int l = 0; l < vertretungsTexte.length; l++) {
+                                        String vertretungsText = vertretungsTexte[l];
+
+                                        TextView vertretungsTextView = new TextView(vertretungsRow.getContext());
+
+                                        if (vertretungsText.length() > 1 && vertretungsText.substring(0, 1).equals("%")) {
+                                            vertretungsTextView.setBackgroundColor(rot);
+                                            vertretungsText = vertretungsText.substring(1);
+                                        }
+                                        if (vertretungsText.equals("Vertretung"))
+                                            vertretungsText = "Vtr.";
+                                        else if (vertretungsText.equals("Mitbetreuung"))
+                                            vertretungsText = "Mitbetr.";
+                                        if (vertretungsText.contains("^")) {
+                                            int start = vertretungsText.indexOf("^");
+                                            int end = vertretungsText.indexOf("^", start + 1);
+                                            vertretungsText = vertretungsText.replace("^", "");
+                                            SpannableStringBuilder spanString = new SpannableStringBuilder(vertretungsText);
+                                            spanString.setSpan(new StrikethroughSpan(), start, end - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                                            vertretungsTextView.setText(spanString);
+                                        } else {
+                                            vertretungsTextView.setText(vertretungsText);
+                                        }
+
+                                        vertretungsTextView.setPadding(10, 0, 15, 0);
+                                        if (l == 0) {
+                                            vertretungsTextView.setSingleLine(true);
+                                        } else if (l == vertretungsTexte.length - 1) {
+                                            vertretungsTextView.setMaxWidth(vertretungsTable.getWidth() / 4);
+                                        }
+
+                                        vertretungsTextView.setTextColor(weiss);
+                                        vertretungsTextView.setTextSize(10f);
+                                        vertretungsTextView.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
+
+                                        vertretungsRow.addView(vertretungsTextView);
+
+                                        if (l != vertretungsTexte.length - 1) {
+                                            View divider = new View(vertretungsRow.getContext());
+                                            divider.setLayoutParams(new TableRow.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
+                                            divider.setBackgroundColor(weiss);
+
+                                            vertretungsRow.addView(divider);
+                                        }
+                                    }
+
+                                    vertretungsTable.addView(vertretungsRow);
+
+                                    JSONArray evas = vertretung.getJSONArray("eva");
+
+                                    for (int l = 0; l < evas.length(); l++) {
+
+                                        //TODO maybe optimize eva
+
+                                        String evaText = evas.getString(l);
+
+                                        float density = vertretungsTable.getContext().getResources().getDisplayMetrics().density;
+
+                                        TableLayout.LayoutParams rowEvaParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                                        TableRow rowEva = new TableRow(vertretungsTable.getContext());
+                                        rowEva.setBackgroundColor(evaGelb);
+                                        rowEva.setLayoutParams(rowEvaParams);
+
+                                        TableRow.LayoutParams evaLinearParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+                                        evaLinearParams.span = 13;
+                                        ConstraintLayout constraintEva = new ConstraintLayout(rowEva.getContext());
+                                        constraintEva.setPadding(15, 15, 15, 15);
+                                        constraintEva.setId(View.generateViewId());
+                                        //linearEva.setBackgroundColor(Color.rgb(255,0,0));
+                                        constraintEva.setLayoutParams(evaLinearParams);
+                                        ConstraintSet constraintSet = new ConstraintSet();
+                                        constraintSet.clone(constraintEva);
+
+                                        ConstraintLayout.LayoutParams evaBeschrParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+                                        TextView evaBeschrTextView = new TextView(constraintEva.getContext());
+                                        evaBeschrTextView.setTextColor(piusDarkColor);
+                                        evaBeschrTextView.setTextSize(10);
+                                        evaBeschrTextView.setSingleLine(true);
+                                        evaBeschrTextView.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+                                        evaBeschrTextView.setText(getString(R.string.eva));
+                                        evaBeschrTextView.setId(TextView.generateViewId());
+                                        constraintEva.addView(evaBeschrTextView, 0, evaBeschrParams);
+
+                                        constraintSet.connect(evaBeschrTextView.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT);
+                                        constraintSet.connect(evaBeschrTextView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                                        constraintSet.constrainHeight(evaBeschrTextView.getId(), ConstraintSet.WRAP_CONTENT);
+                                        constraintSet.constrainWidth(evaBeschrTextView.getId(), ConstraintSet.WRAP_CONTENT);
+                                        constraintSet.applyTo(constraintEva);
+
+                                        ConstraintLayout.LayoutParams evaParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+                                        evaParams.setMargins(0, 0, 0, 0);
+                                        final TextView evaTextView = new TextView(constraintEva.getContext());
+                                        evaTextView.setPadding(20, 0, (int) (40 * density), 0);
+                                        evaTextView.setTextColor(piusDarkColor);
+                                        evaTextView.setTextSize(10);
+                                        evaTextView.setId(TextView.generateViewId());
+                                        evaTextView.setText(evaText);
+                                        constraintEva.addView(evaTextView, 1, evaParams);
+
+                                        constraintSet.connect(evaTextView.getId(), ConstraintSet.LEFT, evaBeschrTextView.getId(), ConstraintSet.RIGHT);
+                                        constraintSet.connect(evaTextView.getId(), ConstraintSet.RIGHT, vertretungsTable.getId(), ConstraintSet.RIGHT);
+                                        constraintSet.connect(evaTextView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                                        constraintSet.connect(evaTextView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                                        constraintSet.constrainHeight(evaTextView.getId(), ConstraintSet.WRAP_CONTENT);
+                                        constraintSet.constrainWidth(evaTextView.getId(), ConstraintSet.MATCH_CONSTRAINT);
+
+                                        constraintSet.applyTo(constraintEva);
+
+                                        rowEva.addView(constraintEva);
+
+                                        vertretungsTable.addView(rowEva);
+
+                                    }
+
+                                }
                             }
                         }
 

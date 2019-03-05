@@ -44,7 +44,9 @@
     <string name="kurse_heading">Deine Klasse/Stufe/Kurse:</string>
     <!--TODO verbessere keine_kurse-->
     <string name="keine_kurse">Du hast noch nicht deine Kurse ausgewählt.\nWähle deine eigenen Kurse aus um auf dem Dashboard eine gekürzte Fassung des Vertretungsplans zu sehen und Benachrichtigungen zu bekommen.</string>
-    <string name="add_kurse">Neue Klasse/Stufe/Kurs hinzufügen</string>
+    <string name="add_kurse_manually">Neue Klasse/Stufe/Kurs hinzufügen</string>
+    <string name="add_kurse_pdf">Neue Klasse/Stufe/Kurs hinzufügen</string>
+    <string name="add_kurse_scan">Neue Klasse/Stufe/Kurs hinzufügen</string>
     <string name="kurse_filename">kurse.json</string>
 
     <string name="dialog_add_title_stufe">Wähle deine Stufe:</string>
@@ -167,10 +169,10 @@
         <item>Kurs</item>
         <item>Raum</item>
         <item>Akt.</item>
-        <item>Plan</item>
         <item>Bemerkung</item>
     </string-array>
     <string name="eva">Auftrag:</string>
     <string name="ticker">Ticker-Text:</string>
+    <string name="nicht_betroffen">Keiner deiner ausgewählten Kurse ist betroffen!</string>
 
 </resources>

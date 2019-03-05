@@ -52,7 +52,9 @@ public class KurseFragment extends Fragment implements KursSelectionCompleteList
 
     TextView kurseHeader;
     TextView keineKurseInfo;
-    Button addKurse; //TODO umbennen
+    Button addKurseManually;
+    Button addKursePDF;
+    Button addKurseScan;
     LinearLayout kurseList;
 
     boolean stufePickerOngoingScroll;
@@ -71,17 +73,24 @@ public class KurseFragment extends Fragment implements KursSelectionCompleteList
 
         kurseHeader = getActivity().findViewById(R.id.kurse_header);
         keineKurseInfo = getActivity().findViewById(R.id.keine_kurse_info);
-        addKurse = getActivity().findViewById(R.id.add_kurse_manually);
+        addKurseManually = getActivity().findViewById(R.id.add_kurse_manually);
+        addKursePDF = getActivity().findViewById(R.id.add_kurse_pdf);
+        addKurseScan = getActivity().findViewById(R.id.add_kurse_scan);
         kurseList = getActivity().findViewById(R.id.kurse_list);
         kurseList.setAlpha(1f);
 
 
-        addKurse.setOnClickListener(new View.OnClickListener() {
+        addKurseManually.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                new KurseSelectionManualDialog().show(getActivity().getFragmentManager(), "dialog");
                 openEmptyAddDialog();
             }
         });
+
+        //TODO: change to action
+        addKursePDF.setVisibility(View.GONE);
+        addKurseScan.setVisibility(View.GONE);
     }
 
     @Override

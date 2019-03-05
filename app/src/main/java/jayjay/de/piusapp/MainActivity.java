@@ -88,6 +88,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Liste im Drawer Layout
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        //TODO: einfügen!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        navigationView.getMenu().findItem(R.id.nav_stundenplan).setVisible(false);
+        navigationView.getMenu().findItem(R.id.nav_termine).setVisible(false);
+        navigationView.getMenu().findItem(R.id.nav_news).setVisible(false);
+        navigationView.getMenu().findItem(R.id.nav_teacher).setVisible(false);
+        navigationView.getMenu().findItem(R.id.nav_unterrichtszeiten).setVisible(false);
+
         navigationView.setNavigationItemSelectedListener(this); //Dadurch wird Methode onNavigationItemSelected zur Activity hinzugefügr (siehe unten)
         mPreviousMenuItem = navigationView.getMenu().findItem(R.id.nav_dashboard); //setze dashboard MenuItem als previous Item
         mPreviousMenuItem.setCheckable(true).setChecked(true); //markiere Dashboard MenuItem

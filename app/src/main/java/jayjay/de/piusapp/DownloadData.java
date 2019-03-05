@@ -261,8 +261,7 @@ public class DownloadData extends AsyncTask<Void ,Void ,DownloadWrapper> {
                                 vertretung.put("kurs", trElement.child(2).text());
                                 vertretung.put("raum", trElement.child(3).text());
                                 vertretung.put("lehrerAktuell", trElement.child(4).text());
-                                vertretung.put("lehrerPlan", trElement.child(5).text());
-                                vertretung.put("bemerkung", trElement.child(6).text());
+                                vertretung.put("bemerkung", trElement.child(5).text());
 
                                 trElement = trElement.nextElementSibling();
 
